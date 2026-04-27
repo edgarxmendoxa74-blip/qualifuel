@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Qualifuel Custom Styles - Official Logo Matching */
+.bg-quali-primary { background-color: #9ACA3C; }
+.bg-quali-secondary { background-color: #F26522; }
+.bg-quali-green-light { background-color: #EBF4D9; }
+.bg-quali-background { background-color: #121212; }
+.bg-quali-dark { background-color: #000000; }
+
+.text-quali-primary { color: #9ACA3C; }
+.text-quali-secondary { color: #F26522; }
+.text-quali-dark { color: #000000; }
+.text-quali-gray { color: #94A3B8; }
+.text-quali-white { color: #FFFFFF; }
+
+.border-quali-primary { border-color: #9ACA3C; }
+.border-quali-secondary { border-color: #F26522; }
+.border-quali-dark { border-color: #1A1A1A; }
+.border-quali-light { border-color: #333333; }
+
+.ring-quali-primary { --tw-ring-color: #9ACA3C; }
+.ring-quali-secondary { --tw-ring-color: #F26522; }
+
+/* Gradient backgrounds - Qualifuel Official Branding */
+.bg-quali-gradient {
+  background: linear-gradient(135deg, #9ACA3C 0%, #7DA62F 100%);
+}
+
+.bg-quali-black-gradient {
+  background: linear-gradient(135deg, #000000 0%, #121212 100%);
+}
+
+.bg-quali-soft-gradient {
+  background: linear-gradient(to bottom, #121212 0%, #000000 100%);
+}
+
+/* Hide scrollbar for mobile nav */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Image loading optimization */
+img {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: crisp-edges;
+}
+
+/* Preload critical images */
+.preload-image {
+  content: '';
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  width: 1px;
+  height: 1px;
+}

@@ -98,8 +98,9 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ onBack }) => {
             <FolderOpen className="h-8 w-8 text-quali-primary" />
           </div>
           <div>
-            <h2 className="text-5xl font-black text-white italic tracking-tighter mb-1 uppercase">
-              Sector <span className="text-quali-primary">Logistics</span>
+            <h2 className="text-5xl font-black text-white tracking-tighter mb-1 uppercase font-pretendard">
+              <span className="text-white">Sector </span>
+              <span className="text-quali-primary">Logistics</span>
             </h2>
             <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Inventory Category Control</p>
           </div>

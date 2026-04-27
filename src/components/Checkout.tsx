@@ -113,7 +113,10 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                 <ArrowLeft className="h-5 w-5 md:h-6 md:w-6 text-gray-400 group-hover:text-white" />
               </button>
               <div>
-                <h1 className="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-1 uppercase leading-none">Order <span className="text-quali-primary">Checkout</span></h1>
+                <h1 className="text-3xl md:text-5xl font-black text-white tracking-tighter mb-1 uppercase leading-none font-pretendard">
+                  <span className="text-white">Order </span>
+                  <span className="text-quali-primary">Checkout</span>
+                </h1>
                 <p className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Step 1: Contact & Delivery</p>
               </div>
            </div>

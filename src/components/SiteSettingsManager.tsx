@@ -181,7 +181,10 @@ const SiteSettingsManager: React.FC = () => {
             <SettingsIcon className="h-8 w-8 text-quali-primary" />
           </div>
           <div>
-            <h2 className="text-5xl font-black text-white italic tracking-tighter mb-1">Brand <span className="text-quali-primary">Identity</span></h2>
+            <h2 className="text-5xl font-black text-white tracking-tighter mb-1 font-pretendard">
+              <span className="text-white">Brand </span>
+              <span className="text-quali-primary">Identity</span>
+            </h2>
             <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Master System Configuration</p>
           </div>
         </div>
@@ -309,14 +312,21 @@ const SiteSettingsManager: React.FC = () => {
             <div className="bg-white/[0.02] p-8 rounded-[2.5rem] border border-white/10 space-y-6">
               <div className="relative h-48 rounded-[2rem] overflow-hidden border border-white/10 shadow-xl group">
                 <img src={heroPreview || "/images/qualifuel-banner.png"} alt="Hero Banner" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center">
-                   {isEditing && (
-                     <>
-                       <input type="file" accept="image/*" onChange={handleHeroChange} className="hidden" id="hero-upload" disabled={isSaving || uploading} />
-                       <label htmlFor="hero-upload" className="bg-white text-black px-6 py-3 rounded-xl font-black text-[10px] uppercase tracking-widest cursor-pointer hover:bg-quali-primary hover:text-white transition-all">Change Banner</label>
-                     </>
-                   )}
-                </div>
+                
+                {isEditing ? (
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-all flex flex-col items-center justify-center">
+                    <input type="file" accept="image/*" onChange={handleHeroChange} className="hidden" id="hero-upload" disabled={isSaving || uploading} />
+                    <label htmlFor="hero-upload" className="bg-quali-primary text-white px-8 py-4 rounded-xl font-black text-xs uppercase tracking-widest cursor-pointer hover:scale-105 transition-transform shadow-[0_0_20px_rgba(154,202,60,0.4)]">
+                      Upload New Banner
+                    </label>
+                    <p className="text-white/70 font-bold uppercase tracking-widest text-[8px] mt-4">Click to select new image file</p>
+                  </div>
+                ) : (
+                  <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center pointer-events-none">
+                    {/* Hover state for non-editing mode - just to show it's interactive if they click Edit later */}
+                    <span className="bg-white/10 backdrop-blur-md text-white px-6 py-2 rounded-full font-black text-[10px] uppercase tracking-widest border border-white/20">Active Banner</span>
+                  </div>
+                )}
               </div>
               <div className="space-y-3 text-center">
                 <h4 className="text-sm font-black text-white uppercase tracking-widest italic">Hero Banner Image</h4>

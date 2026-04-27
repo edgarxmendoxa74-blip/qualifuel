@@ -18,7 +18,7 @@ const Hero: React.FC = () => {
         </div>
         
         {/* Subtitle */}
-        <p className="text-xl md:text-3xl text-white font-noto font-extrabold tracking-wide drop-shadow-lg mb-2">
+        <p className="text-xl md:text-3xl text-white font-noto-kr font-extrabold tracking-wide drop-shadow-lg mb-2">
           Your Daily Partner in Health!
         </p>
         <p className="text-white/90 text-md md:text-lg font-medium opacity-90 max-w-2xl mx-auto">

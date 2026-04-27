@@ -109,8 +109,15 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
                 </span>
               </div>
               
-              <h2 className="text-5xl md:text-7xl xl:text-8xl font-black text-white mb-4 italic tracking-tighter leading-none uppercase">
-                {siteSettings?.site_name || "QualiFuel"}
+              <h2 className="text-5xl md:text-7xl xl:text-8xl font-pretendard font-black text-white mb-4 tracking-tighter leading-none uppercase">
+                {siteSettings?.site_name === "QualiFuel" || !siteSettings?.site_name ? (
+                  <>
+                    <span className="text-white">Quali</span>
+                    <span className="text-quali-primary">Fuel</span>
+                  </>
+                ) : (
+                  siteSettings.site_name
+                )}
               </h2>
               
               <p className="text-sm md:text-xl font-black text-quali-secondary tracking-[0.3em] uppercase mb-8">
@@ -191,7 +198,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
             {/* Hide category headers on mobile since they're in the sticky nav */}
             <div className="hidden md:flex items-center mb-8">
               <span className="text-3xl mr-3">{category.icon}</span>
-              <h3 className="text-3xl font-noto font-medium text-black">{category.name}</h3>
+              <h3 className="text-3xl font-noto-kr font-medium text-black">{category.name}</h3>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

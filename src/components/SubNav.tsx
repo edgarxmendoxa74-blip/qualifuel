@@ -42,7 +42,7 @@ const SubNav: React.FC<SubNavProps> = ({ selectedCategory, onCategoryClick }) =>
                   }`}
                 >
                   <span className="text-sm">{c.icon}</span>
-                  <span>{c.name}</span>
+                  <span className="font-noto-kr">{c.name}</span>
                 </button>
               ))}
             </>

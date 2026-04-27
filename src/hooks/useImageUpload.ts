@@ -22,10 +22,6 @@ export const useImageUpload = () => {
         throw new Error('Image size must be less than 5MB');
       }
 
-      // Generate unique filename
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
-
       // Simulate upload progress
       const progressInterval = setInterval(() => {
         setUploadProgress(prev => {
@@ -37,42 +33,18 @@ export const useImageUpload = () => {
         });
       }, 100);
 
-      // Upload to Supabase Storage
-      const { data, error } = await supabase.storage
-        .from('menu-images')
-        .upload(fileName, file, {
-          cacheControl: '3600',
-          upsert: false,
-          contentType: file.type
-        });
+      // Use FileReader to convert file to Base64
+      const base64Url = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.onerror = () => reject(new Error('Failed to parse image file'));
+        reader.readAsDataURL(file);
+      });
 
       clearInterval(progressInterval);
       setUploadProgress(100);
 
-      if (error) {
-        // Provide helpful error message for bucket not found
-        if (error.message.includes('Bucket not found') || error.message.includes('bucket')) {
-          throw new Error(
-            '❌ Storage bucket "menu-images" not found!\n\n' +
-            '📋 Setup Instructions:\n' +
-            '1. Go to your Supabase Dashboard\n' +
-            '2. Navigate to Storage section\n' +
-            '3. Click "New Bucket"\n' +
-            '4. Name it: menu-images\n' +
-            '5. Make it PUBLIC\n' +
-            '6. Save and try uploading again\n\n' +
-            'OR use the SQL command in the browser console for quick setup.'
-          );
-        }
-        throw error;
-      }
-
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('menu-images')
-        .getPublicUrl(data.path);
-
-      return publicUrl;
+      return base64Url;
     } catch (error) {
       console.error('Error uploading image:', error);
       throw error;

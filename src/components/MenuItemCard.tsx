@@ -193,7 +193,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
         {/* Content */}
         <div className="p-8">
           <div className="flex items-start justify-between mb-2">
-            <h4 className="text-2xl font-black text-white leading-tight flex-1 pr-2 uppercase tracking-tighter italic">
+            <h4 className="text-2xl font-black text-white leading-tight flex-1 pr-2 uppercase tracking-tighter font-pretendard">
               {item.name}
             </h4>
           </div>
@@ -312,13 +312,18 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
                               setSelectedVariation(variation);
                             }
                           }}
-                          className={`flex flex-col p-6 rounded-3xl border-2 transition-all text-left group ${
+                          className={`flex flex-col p-4 md:p-6 rounded-3xl border-2 transition-all text-left group ${
                             isSelected
                               ? 'border-quali-primary bg-quali-primary/5 shadow-[0_0_20px_rgba(154,202,60,0.1)]'
                               : 'border-white/5 bg-white/[0.02] hover:border-white/20'
                           }`}
                         >
-                          <div className="flex items-center justify-between mb-2">
+                          {variation.image && (
+                            <div className="w-full h-24 mb-4 rounded-xl overflow-hidden bg-white/5 border border-white/10 shrink-0">
+                              <img src={variation.image} alt={variation.name} className="w-full h-full object-cover" />
+                            </div>
+                          )}
+                          <div className="flex items-center justify-between mb-2 w-full">
                              <span className={`text-sm font-black uppercase tracking-widest ${isSelected ? 'text-white' : 'text-gray-400'}`}>
                                {variation.name}
                              </span>

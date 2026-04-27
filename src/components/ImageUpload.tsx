@@ -122,50 +122,13 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             type="button"
             onClick={triggerFileSelect}
             disabled={isLoading}
-            className="flex items-center space-x-2 px-4 py-2 bg-chick-gradient text-white rounded-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+            className="flex items-center space-x-2 px-4 py-2 bg-quali-gradient text-white rounded-lg hover:shadow-xl transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed font-medium"
           >
             <Upload className="h-4 w-4" />
             <span>📁 Upload Image</span>
           </button>
-          <span className="text-sm text-gray-500">or enter URL below</span>
         </div>
       )}
-
-      {/* OR Divider */}
-      <div className="flex items-center gap-2">
-        <div className="flex-1 border-t border-gray-300"></div>
-        <span className="text-xs text-gray-500 font-medium">OR</span>
-        <div className="flex-1 border-t border-gray-300"></div>
-      </div>
-
-      {/* URL Input as fallback */}
-      <div className="space-y-2">
-        <label className="block text-sm font-medium text-gray-700 mb-2">Enter Image URL</label>
-        <input
-          type="text"
-          value={currentImage || ''}
-          onChange={(e) => onImageChange(e.target.value || undefined)}
-          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-chick-orange focus:border-transparent"
-          placeholder="/images/chick-central-logo.jpg or https://..."
-          disabled={isLoading}
-        />
-        
-        {/* Quick Path Helper */}
-        <button
-          type="button"
-          onClick={() => onImageChange('/images/chick-central-logo.jpg')}
-          className="text-xs px-3 py-1.5 bg-yellow-50 text-yellow-700 rounded-lg hover:bg-yellow-100 transition-colors"
-        >
-          🐔 Use Chick Central Logo
-        </button>
-        
-        <p className="text-xs text-gray-500">
-          💡 <strong>Supports:</strong> All image formats • Any quality/size • Upload file or enter URL
-        </p>
-        <p className="text-xs text-gray-400">
-          ✨ Low quality images are welcome! Upload any image you have.
-        </p>
-      </div>
     </div>
   );
 };

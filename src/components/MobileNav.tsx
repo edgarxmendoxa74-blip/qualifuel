@@ -38,7 +38,7 @@ const MobileNav: React.FC<MobileNavProps> = ({ activeCategory, onCategoryClick }
             }`}
           >
             <span className="text-sm">{category.icon}</span>
-            <span className="whitespace-nowrap italic">{category.name}</span>
+            <span className="whitespace-nowrap italic font-noto-kr">{category.name}</span>
           </button>
         ))}
       </div>

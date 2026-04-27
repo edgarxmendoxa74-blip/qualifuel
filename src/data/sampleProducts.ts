@@ -5,7 +5,7 @@ export const SAMPLE_PRODUCTS: MenuItem[] = [
   {
     id: 'sample-1',
     name: 'QualiFuel High Protein Salad',
-    description: 'Fresh greens topped with grilled chicken, avocado, hard-boiled eggs, and our signature balsamic dressing.',
+    description: 'Fresh greens topped with seared salmon, avocado, hard-boiled eggs, and our signature balsamic dressing.',
     basePrice: 250,
     category: 'food',
     popular: true,

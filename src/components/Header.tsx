@@ -37,11 +37,18 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
                 </div>
               )}
               <div className="flex flex-col text-left">
-                <h1 className="text-lg md:text-2xl font-black tracking-tighter leading-none italic uppercase">
+                <h1 className="text-lg md:text-2xl font-pretendard font-black tracking-tighter leading-none uppercase">
                   {loading ? (
                     <div className="w-20 h-5 bg-white/10 rounded animate-pulse" />
                   ) : (
-                    siteSettings?.site_name || "QualiFuel"
+                    siteSettings?.site_name === "QualiFuel" || !siteSettings?.site_name ? (
+                      <>
+                        <span className="text-white">Quali</span>
+                        <span className="text-quali-primary">Fuel</span>
+                      </>
+                    ) : (
+                      siteSettings.site_name
+                    )
                   )}
                 </h1>
                 <p className="text-[7px] md:text-[9px] font-bold text-quali-secondary tracking-[0.15em] uppercase mt-0.5 hidden xs:block">

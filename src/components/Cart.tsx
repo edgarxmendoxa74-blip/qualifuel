@@ -29,7 +29,11 @@ const Cart: React.FC<CartProps> = ({
              <ShoppingBag size={300} />
           </div>
           <div className="text-8xl mb-8 transform hover:scale-110 transition-transform cursor-default">🥗</div>
-          <h2 className="text-5xl font-black text-white italic tracking-tighter mb-4 uppercase">Your Cart <span className="text-quali-primary text-3xl">is Empty</span></h2>
+          <h2 className="text-5xl font-black text-white tracking-tighter mb-4 uppercase font-pretendard">
+            <span className="text-white">Your </span>
+            <span className="text-quali-primary">Cart </span>
+            <span className="text-white text-3xl">is Empty</span>
+          </h2>
           <p className="text-gray-500 mb-12 text-sm font-black uppercase tracking-[0.4em]">Fuel your day with high-performance nutrition</p>
           <button
             onClick={onContinueShopping}
@@ -56,7 +60,10 @@ const Cart: React.FC<CartProps> = ({
         </button>
         
         <div className="text-center order-first md:order-none">
-           <h1 className="text-4xl md:text-5xl font-black text-white italic tracking-tighter uppercase mb-1">Your <span className="text-quali-primary">Cart</span></h1>
+           <h1 className="text-4xl md:text-5xl font-black text-white tracking-tighter uppercase mb-1 font-pretendard">
+             <span className="text-white">Your </span>
+             <span className="text-quali-primary">Cart</span>
+           </h1>
            <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Review your selections</p>
         </div>
 

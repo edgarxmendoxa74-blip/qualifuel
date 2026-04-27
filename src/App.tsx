@@ -25,7 +25,7 @@ function MainApp() {
   };
 
   return (
-    <div className="min-h-screen bg-quali-dark font-inter">
+    <div className="min-h-screen bg-quali-dark font-pretendard">
       <Header 
         cartItemsCount={cart.getTotalItems()}
         onCartClick={() => handleViewChange('cart')}

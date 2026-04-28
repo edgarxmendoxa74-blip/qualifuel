@@ -238,17 +238,30 @@ export const useMenu = () => {
 
   const deleteMenuItem = async (id: string) => {
     try {
-      // Delete related variations first
-      const { error: varError } = await supabase.from('variations').delete().eq('menu_item_id', id);
-      if (varError) console.warn('Warning: Failed to delete variations:', varError);
+      // Prevent attempts to delete sample data from the real database
+      if (id.startsWith('sample-')) {
+        setMenuItems(prev => prev.filter(item => item.id !== id));
+        return;
+      }
 
-      // Delete related add-ons
-      const { error: addOnError } = await supabase.from('add_ons').delete().eq('menu_item_id', id);
-      if (addOnError) console.warn('Warning: Failed to delete add-ons:', addOnError);
+      // Basic UUID validation to prevent DB syntax errors
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(id)) {
+        // If it's not a UUID and not a sample ID, it's likely a custom text ID
+        // from early migrations (like 'artisan-ciabatta'). We'll try to delete it,
+        // but it might fail if the column type is strictly UUID.
+        console.warn(`Deleting item with non-standard ID format: ${id}`);
+      }
 
       // Delete the menu item itself
+      // Database has ON DELETE CASCADE for variations and add_ons, 
+      // so we don't need to delete them manually here.
       const { error } = await supabase.from('menu_items').delete().eq('id', id);
-      if (error) throw error;
+      
+      if (error) {
+        console.error('Database delete error:', error);
+        throw new Error(`Database error: ${error.message}`);
+      }
 
       await fetchMenuItems();
     } catch (err) {

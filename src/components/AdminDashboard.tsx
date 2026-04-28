@@ -58,7 +58,8 @@ const AdminDashboard: React.FC = () => {
         setIsProcessing(true);
         await deleteMenuItem(id);
       } catch (error) {
-        alert('Failed to delete item.');
+        const msg = error instanceof Error ? error.message : 'Failed to delete item.';
+        alert(`Delete failed: ${msg}`);
       } finally {
         setIsProcessing(false);
       }

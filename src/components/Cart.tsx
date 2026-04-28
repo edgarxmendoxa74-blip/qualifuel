@@ -34,7 +34,7 @@ const Cart: React.FC<CartProps> = ({
             <span className="text-quali-primary">Cart </span>
             <span className="text-white text-3xl">is Empty</span>
           </h2>
-          <p className="text-gray-500 mb-12 text-sm font-black uppercase tracking-[0.4em]">Fuel your day with high-performance nutrition</p>
+          <p className="text-gray-500 mb-12 text-sm font-black tracking-[0.4em]">Fuel your day with high-performance nutrition</p>
           <button
             onClick={onContinueShopping}
             className="bg-quali-gradient text-white px-12 py-6 rounded-2xl hover:shadow-[0_0_40px_rgba(154,202,60,0.3)] transition-all duration-300 font-black uppercase tracking-widest text-sm transform hover:scale-105 border border-white/10 shadow-xl"
@@ -64,7 +64,7 @@ const Cart: React.FC<CartProps> = ({
              <span className="text-white">Your </span>
              <span className="text-quali-primary">Cart</span>
            </h1>
-           <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Review your selections</p>
+           <p className="text-[10px] font-black text-gray-500 tracking-[0.4em]">Review your selections</p>
         </div>
 
         <button
@@ -99,15 +99,15 @@ const Cart: React.FC<CartProps> = ({
                     </div>
 
                     <div className="flex-1 min-w-0 text-center sm:text-left">
-                      <h3 className="text-lg md:text-xl font-black text-white italic tracking-tight uppercase group-hover:text-quali-primary transition-colors mb-1">{item.name}</h3>
+                      <h3 className="text-lg md:text-xl font-black text-white italic tracking-tight group-hover:text-quali-primary transition-colors mb-1">{item.name}</h3>
                       <div className="flex flex-wrap justify-center sm:justify-start gap-2 mb-4">
                          {item.selectedVariations?.length ? item.selectedVariations.map(v => (
-                            <span key={v.id} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-lg text-[8px] font-black text-gray-400 uppercase tracking-widest">{v.name}</span>
+                            <span key={v.id} className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-lg text-[8px] font-black text-gray-400 tracking-widest">{v.name}</span>
                          )) : item.selectedVariation ? (
-                            <span className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-lg text-[8px] font-black text-gray-400 uppercase tracking-widest">{item.selectedVariation.name}</span>
+                            <span className="px-2 py-0.5 bg-white/5 border border-white/10 rounded-lg text-[8px] font-black text-gray-400 tracking-widest">{item.selectedVariation.name}</span>
                          ) : null}
                          {item.selectedAddOns?.map(addOn => (
-                            <span key={addOn.id} className="px-2 py-0.5 bg-quali-primary/10 border border-quali-primary/20 rounded-lg text-[8px] font-black text-quali-primary uppercase tracking-widest">+ {addOn.name}</span>
+                            <span key={addOn.id} className="px-2 py-0.5 bg-quali-primary/10 border border-quali-primary/20 rounded-lg text-[8px] font-black text-quali-primary tracking-widest">+ {addOn.name}</span>
                          ))}
                       </div>
 
@@ -130,7 +130,7 @@ const Cart: React.FC<CartProps> = ({
                         
                         <div className="flex items-center space-x-4 md:space-x-6">
                           <div className="text-right">
-                            <span className="text-[8px] md:text-[10px] font-black text-gray-500 uppercase tracking-widest block mb-0.5">Item Total</span>
+                            <span className="text-[8px] md:text-[10px] font-black text-gray-500 tracking-widest block mb-0.5">Item Total</span>
                             <span className="text-xl md:text-2xl font-black text-white italic tracking-tighter">₱{(item.totalPrice * item.quantity).toFixed(2)}</span>
                           </div>
                           
@@ -158,18 +158,18 @@ const Cart: React.FC<CartProps> = ({
                 </div>
                 <div>
                    <h2 className="text-xl md:text-2xl font-black text-white italic uppercase tracking-tighter leading-none mb-1">Summary</h2>
-                   <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Price Breakdown</p>
+                   <p className="text-[9px] font-black text-gray-500 tracking-widest">Price Breakdown</p>
                 </div>
              </div>
 
              <div className="space-y-4 md:space-y-6 mb-8 md:mb-10">
                 <div className="flex items-center justify-between text-xs md:text-sm">
-                   <span className="font-black text-gray-500 uppercase tracking-widest italic">Subtotal</span>
+                   <span className="font-black text-gray-500 tracking-widest italic">Subtotal</span>
                    <span className="font-black text-white">₱{getTotalPrice().toFixed(2)}</span>
                 </div>
                 <div className="flex items-center justify-between text-xs md:text-sm">
-                   <span className="font-black text-gray-500 uppercase tracking-widest italic">Service Fee</span>
-                   <span className="font-black text-quali-primary uppercase">TBD at Checkout</span>
+                   <span className="font-black text-gray-500 tracking-widest italic">Service Fee</span>
+                   <span className="font-black text-quali-primary">TBD at Checkout</span>
                 </div>
                 <div className="h-[1px] bg-white/10 w-full" />
                 <div className="flex items-center justify-between">
@@ -185,7 +185,7 @@ const Cart: React.FC<CartProps> = ({
                Checkout Now
              </button>
              
-             <div className="mt-8 flex items-center justify-center space-x-2 text-[9px] md:text-[10px] font-black text-gray-600 uppercase tracking-widest italic">
+             <div className="mt-8 flex items-center justify-center space-x-2 text-[9px] md:text-[10px] font-black text-gray-600 tracking-widest italic">
                 <Zap className="h-3 w-3" />
                 <span>Secure Fuel Logistics</span>
              </div>

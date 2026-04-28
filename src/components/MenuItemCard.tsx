@@ -139,7 +139,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
     <>
       <div className={`bg-white/5 backdrop-blur-sm rounded-[2.5rem] shadow-xl hover:shadow-quali-primary/10 transition-all duration-500 overflow-hidden group animate-scale-in border border-white/10 ${!item.available ? 'opacity-40' : ''}`}>
         {/* Image Container with Badges */}
-        <div className="relative h-64 bg-white/5">
+        <div className="relative h-48 bg-white/5">
           {item.image ? (
             <img
               src={item.image}
@@ -191,9 +191,9 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
         </div>
         
         {/* Content */}
-        <div className="p-8">
+        <div className="p-5">
           <div className="flex items-start justify-between mb-2">
-            <h4 className="text-2xl font-black text-white leading-tight flex-1 pr-2 uppercase tracking-tighter font-pretendard">
+            <h4 className="text-lg font-black text-white leading-tight flex-1 pr-2 uppercase tracking-tighter font-pretendard">
               {item.name}
             </h4>
           </div>
@@ -203,7 +203,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
             <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{item.category}</span>
           </div>
           
-          <p className={`text-xs mb-8 leading-relaxed font-bold uppercase tracking-wide min-h-[40px] ${!item.available ? 'text-gray-600' : 'text-gray-400'}`}>
+          <p className={`text-[10px] mb-4 leading-relaxed font-bold tracking-wide min-h-[30px] ${!item.available ? 'text-gray-600' : 'text-gray-400'}`}>
             {!item.available ? 'Currently unavailable' : item.description}
           </p>
           
@@ -215,12 +215,12 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
                   <span className="text-[10px] text-gray-500 line-through font-black">
                     ₱{item.basePrice.toFixed(2)}
                   </span>
-                  <span className="text-3xl font-black text-quali-primary italic">
+                  <span className="text-xl font-black text-quali-primary italic">
                     ₱{item.discountPrice.toFixed(2)}
                   </span>
                 </div>
               ) : (
-                <div className="text-3xl font-black text-white italic">
+                <div className="text-xl font-black text-white italic">
                   ₱{item.basePrice.toFixed(2)}
                 </div>
               )}
@@ -229,32 +229,32 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
             {/* Action Buttons */}
             <div className="flex-shrink-0">
               {!item.available ? (
-                <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest border border-gray-500/30 px-6 py-3 rounded-2xl">
+                <div className="text-[9px] font-black text-gray-500 uppercase tracking-widest border border-gray-500/30 px-5 py-2.5 rounded-xl">
                   Inactive
                 </div>
               ) : quantity === 0 ? (
                 <button
                   onClick={handleAddToCart}
-                  className="bg-quali-gradient text-white px-8 py-4 rounded-2xl hover:shadow-[0_0_30px_rgba(154,202,60,0.3)] transition-all duration-300 transform hover:scale-105 font-black text-[10px] uppercase tracking-widest border border-white/10 shadow-lg"
+                  className="bg-quali-gradient text-white px-5 py-3 rounded-xl hover:shadow-[0_0_30px_rgba(154,202,60,0.3)] transition-all duration-300 transform hover:scale-105 font-black text-[9px] uppercase tracking-widest border border-white/10 shadow-lg"
                 >
                   {item.variations?.length || item.addOns?.length ? '✨ Custom' : '🛒 Add'}
                 </button>
               ) : (
-                <div className="flex items-center space-x-4 bg-white/5 rounded-2xl p-2 border border-white/10 shadow-xl backdrop-blur-xl">
+                <div className="flex items-center space-x-2 bg-white/5 rounded-xl p-1 border border-white/10 shadow-xl backdrop-blur-xl">
                   <button
                     onClick={handleDecrement}
-                    className="p-3 hover:bg-white/10 rounded-xl transition-all text-quali-primary"
+                    className="p-2 hover:bg-white/10 rounded-lg transition-all text-quali-primary"
                     aria-label="Decrease quantity"
                   >
-                    <Minus className="h-4 w-4" />
+                    <Minus className="h-3 w-3" />
                   </button>
-                  <span className="font-black text-white min-w-[32px] text-center text-xl">{quantity}</span>
+                  <span className="font-black text-white min-w-[24px] text-center text-sm">{quantity}</span>
                   <button
                     onClick={handleIncrement}
-                    className="p-3 hover:bg-white/10 rounded-xl transition-all text-quali-primary"
+                    className="p-2 hover:bg-white/10 rounded-lg transition-all text-quali-primary"
                     aria-label="Increase quantity"
                   >
-                    <Plus className="h-4 w-4" />
+                    <Plus className="h-3 w-3" />
                   </button>
                 </div>
               )}
@@ -276,7 +276,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
 
             <div className="p-8 md:p-12">
               <div className="mb-10 md:mb-12">
-                <p className="text-[10px] font-black text-quali-primary uppercase tracking-[0.4em] mb-2 text-center italic">Elite Fuel Selection</p>
+                <p className="text-[10px] font-black text-quali-primary tracking-[0.4em] mb-2 text-center italic">Elite Fuel Selection</p>
                 <h3 className="text-3xl md:text-4xl font-black text-white italic text-center leading-tight uppercase tracking-tighter">
                   {item.name}
                 </h3>
@@ -286,7 +286,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
               {item.variations && item.variations.length > 0 && (
                 <div className="mb-12">
                   <div className="flex items-center justify-between mb-6">
-                    <h4 className="text-xs font-black text-white uppercase tracking-[0.2em] italic">
+                    <h4 className="text-xs font-black text-white tracking-[0.2em] italic">
                       {maxFlavors > 1 ? `Pick ${maxFlavors} Options` : 'Step 1: Choose Source'}
                     </h4>
                     {maxFlavors > 1 && (
@@ -346,10 +346,10 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
               {/* Add-ons */}
               {groupedAddOns && Object.keys(groupedAddOns).length > 0 && (
                 <div className="mb-12">
-                   <h4 className="text-xs font-black text-white uppercase tracking-[0.2em] italic mb-6">Step 2: Boost Performance</h4>
+                   <h4 className="text-xs font-black text-white tracking-[0.2em] italic mb-6">Step 2: Boost Performance</h4>
                   {Object.entries(groupedAddOns).map(([category, addOns]) => (
                     <div key={category} className="mb-8">
-                       <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-4 italic">{category.replace('-', ' ')}</p>
+                       <p className="text-[10px] font-black text-gray-500 tracking-widest mb-4 italic">{category.replace('-', ' ')}</p>
                       <div className="space-y-4">
                         {addOns.map((addOn) => (
                           <div
@@ -358,7 +358,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
                           >
                             <div className="flex-1">
                               <span className="text-sm font-black text-white uppercase tracking-wider">{addOn.name}</span>
-                              <div className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                              <div className="text-[10px] font-black text-gray-500 tracking-widest">
                                 {addOn.price > 0 ? `₱${addOn.price.toFixed(2)} / unit` : 'Complementary'}
                               </div>
                             </div>
@@ -411,7 +411,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
               {/* Price Summary & Action */}
               <div className="bg-quali-primary/10 border border-quali-primary/20 rounded-[2rem] p-10 mt-12">
                 <div className="flex items-center justify-between mb-8">
-                  <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest italic">Total Investment</span>
+                  <span className="text-[10px] font-black text-gray-500 tracking-widest italic">Total Investment</span>
                   <span className="text-4xl font-black text-white italic tracking-tighter">₱{calculatePrice().toFixed(2)}</span>
                 </div>
 

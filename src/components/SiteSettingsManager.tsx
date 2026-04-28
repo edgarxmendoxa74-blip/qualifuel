@@ -238,9 +238,9 @@ const SiteSettingsManager: React.FC = () => {
             
             {/* Logo Section */}
             <div className="bg-white/[0.02] p-10 rounded-[2.5rem] border border-white/10 flex flex-col sm:flex-row items-center gap-10">
-              <div className="w-32 h-32 rounded-full overflow-hidden bg-white p-2 ring-4 ring-quali-primary/20 shadow-2xl flex-shrink-0">
+              <div className="w-28 h-28 rounded-full overflow-hidden bg-white ring-4 ring-quali-primary/20 shadow-2xl flex-shrink-0 relative group">
                 {logoPreview ? (
-                  <img src={logoPreview} alt="Logo" className="w-full h-full object-contain" />
+                  <img src={logoPreview} alt="Logo" className="w-full h-full object-cover" />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center text-4xl text-gray-300">\ud83e\udd57</div>
                 )}
@@ -256,7 +256,7 @@ const SiteSettingsManager: React.FC = () => {
                     </label>
                   </div>
                 )}
-                <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Recommeded: PNG / SVG with transparency</p>
+                <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Recommended: 512x512px • PNG / SVG with transparency</p>
               </div>
             </div>
 
@@ -330,7 +330,7 @@ const SiteSettingsManager: React.FC = () => {
               </div>
               <div className="space-y-3 text-center">
                 <h4 className="text-sm font-black text-white uppercase tracking-widest italic">Hero Banner Image</h4>
-                <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Aspect Ratio: 16:9 or 21:9 Recommended</p>
+                <p className="text-[9px] text-gray-500 font-bold uppercase tracking-widest">Standard size: 1920x1080px • Aspect Ratio: 16:9 or 21:9 Recommended</p>
               </div>
             </div>
 

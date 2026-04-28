@@ -23,7 +23,7 @@ const SubNav: React.FC<SubNavProps> = ({ selectedCategory, onCategoryClick }) =>
             <>
               <button
                 onClick={() => onCategoryClick('all')}
-                className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all duration-300 border-2 ${
+                className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest transition-all duration-300 border-2 ${
                   selectedCategory === 'all'
                     ? 'bg-quali-primary text-black border-quali-primary shadow-sm scale-105'
                     : 'bg-white/5 text-white border-white/5 hover:border-quali-primary/50 hover:text-quali-primary'

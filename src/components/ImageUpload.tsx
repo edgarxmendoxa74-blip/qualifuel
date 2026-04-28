@@ -63,11 +63,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       <label className="block text-sm font-medium text-black mb-2">Menu Item Image</label>
       
       {currentImage ? (
-        <div className="relative">
+        <div className="relative max-w-sm mx-auto">
           <img
             src={currentImage}
             alt="Menu item preview"
-            className="w-full h-48 object-cover rounded-lg border border-gray-300 transition-opacity duration-300"
+            className="w-full aspect-square object-cover rounded-[2rem] border border-white/10 shadow-2xl transition-opacity duration-300"
             loading="lazy"
             decoding="async"
             onError={(e) => {
@@ -81,27 +81,29 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
           <button
             type="button"
             onClick={handleRemoveImage}
-            className="absolute top-2 right-2 p-1 bg-red-500 text-white rounded-full hover:bg-red-600 transition-colors duration-200"
+            className="absolute top-4 right-4 p-2 bg-red-500/80 backdrop-blur-md text-white rounded-xl hover:bg-red-500 transition-colors duration-200 shadow-lg"
             disabled={isLoading}
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </button>
         </div>
       ) : (
         <div
           onClick={triggerFileSelect}
-          className="w-full h-48 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:border-quali-primary hover:bg-quali-primary/5 transition-all duration-200"
+          className="max-w-sm mx-auto w-full aspect-square border-2 border-dashed border-white/10 rounded-[2rem] flex flex-col items-center justify-center cursor-pointer hover:border-quali-primary/50 hover:bg-quali-primary/5 transition-all duration-300 group"
         >
           {isLoading ? (
             <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-quali-primary mx-auto mb-2"></div>
-              <p className="text-sm text-gray-600">Loading image...</p>
+              <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-quali-primary mx-auto mb-4"></div>
+              <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Processing Image...</p>
             </div>
           ) : (
             <>
-              <ImageIcon className="h-12 w-12 text-gray-400 mb-2" />
-              <p className="text-sm text-gray-600 mb-1 font-medium">📁 Click to upload image</p>
-              <p className="text-xs text-gray-500">All formats & quality accepted</p>
+              <div className="p-6 bg-white/5 rounded-3xl mb-4 group-hover:scale-110 transition-transform duration-300 border border-white/5">
+                <ImageIcon className="h-10 w-10 text-gray-500" />
+              </div>
+              <p className="text-[10px] font-black text-white uppercase tracking-widest mb-1">📁 Upload Image</p>
+              <p className="text-[8px] font-black text-gray-600 uppercase tracking-widest">Standard size: 800x800px (1:1 Ratio)</p>
             </>
           )}
         </div>

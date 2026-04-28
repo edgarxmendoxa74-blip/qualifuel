@@ -117,19 +117,19 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                   <span className="text-white">Order </span>
                   <span className="text-quali-primary">Checkout</span>
                 </h1>
-                <p className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Step 1: Contact & Delivery</p>
+                <p className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-[0.4em]">Step 1: Contact & Delivery</p>
               </div>
            </div>
            
            <div className="flex items-center space-x-3 md:space-x-4 bg-white/5 px-6 md:px-8 py-3 md:py-4 rounded-2xl md:rounded-3xl border border-white/10 w-full lg:w-auto justify-center md:justify-start">
               <div className="flex items-center space-x-2">
                 <div className="h-2 w-2 rounded-full bg-quali-primary shadow-[0_0_10px_rgba(154,202,60,0.8)]" />
-                <span className="text-[9px] md:text-[10px] font-black text-white uppercase tracking-widest">Details</span>
+                <span className="text-[9px] md:text-[10px] font-black text-white tracking-widest">Details</span>
               </div>
               <div className="h-[1px] w-6 md:w-8 bg-white/10" />
               <div className="flex items-center space-x-2 opacity-30">
                 <div className="h-2 w-2 rounded-full bg-white" />
-                <span className="text-[9px] md:text-[10px] font-black text-white uppercase tracking-widest">Payment</span>
+                <span className="text-[9px] md:text-[10px] font-black text-white tracking-widest">Payment</span>
               </div>
            </div>
         </div>
@@ -145,7 +145,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
 
                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                   <div className="space-y-3">
-                    <label className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Full Name</label>
+                    <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4">Full Name</label>
                     <div className="relative">
                        <User className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-gray-600" />
                        <input
@@ -159,7 +159,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                   </div>
 
                   <div className="space-y-3">
-                    <label className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Mobile Number</label>
+                    <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4">Mobile Number</label>
                     <div className="relative">
                        <Phone className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 text-gray-600" />
                        <input
@@ -196,7 +196,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                       }`}
                     >
                       <div className={`mb-2 md:mb-3 transform group-hover:scale-110 transition-transform ${serviceType === option.value ? 'text-white' : 'text-gray-600'}`}>{option.icon}</div>
-                      <div className={`text-[8px] md:text-[10px] font-black uppercase tracking-widest text-center ${serviceType === option.value ? 'text-white' : 'text-gray-500'}`}>
+                      <div className={`text-[8px] md:text-[10px] font-black tracking-widest text-center ${serviceType === option.value ? 'text-white' : 'text-gray-500'}`}>
                         {option.label}
                       </div>
                     </button>
@@ -206,7 +206,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                <div className="animate-scale-in">
                   {serviceType === 'dine-in' && (
                     <div className="space-y-4 md:space-y-6">
-                      <label className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center">
+                      <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
                         <Users className="h-3 w-3 mr-2" /> Party Size
                       </label>
                       <div className="flex items-center space-x-4 md:space-x-6 bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-[2rem] border border-white/10 w-fit mx-auto lg:mx-0">
@@ -231,7 +231,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
 
                   {serviceType === 'pickup' && (
                     <div className="space-y-4 md:space-y-6">
-                      <label className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center">
+                      <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
                         <Clock className="h-3 w-3 mr-2" /> Pickup Estimate
                       </label>
                       <div className="grid grid-cols-4 gap-2 md:gap-4">
@@ -268,7 +268,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                   {serviceType === 'delivery' && (
                     <div className="space-y-4 md:space-y-8">
                        <div className="space-y-3">
-                        <label className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center">
+                        <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
                           <MapPin className="h-3 w-3 mr-2" /> Delivery Address
                         </label>
                         <textarea
@@ -283,7 +283,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                   )}
 
                   <div className="mt-8 md:mt-10 space-y-3">
-                    <label className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 flex items-center">
+                    <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
                       <MessageSquare className="h-3 w-3 mr-2" /> Order Notes
                     </label>
                     <textarea
@@ -311,7 +311,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                     <div key={item.id} className="flex items-start justify-between group">
                        <div className="flex-1 pr-4">
                           <h4 className="text-xs md:text-sm font-black text-white italic uppercase tracking-tighter group-hover:text-quali-primary transition-colors leading-tight">{item.name}</h4>
-                          <p className="text-[8px] md:text-[10px] font-black text-gray-500 mt-1 uppercase tracking-widest">
+                          <p className="text-[8px] md:text-[10px] font-black text-gray-500 mt-1 tracking-widest">
                              {item.quantity} x ₱{item.totalPrice}
                           </p>
                        </div>
@@ -345,8 +345,8 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                   <ShieldCheck className="h-6 w-6 md:h-8 md:w-8 text-quali-primary" />
                </div>
                <div>
-                  <h4 className="text-[10px] md:text-xs font-black text-white uppercase tracking-widest">Secure Dispatch</h4>
-                  <p className="text-[8px] md:text-[9px] font-black text-gray-500 uppercase tracking-widest mt-1">Verified Order Protocol</p>
+                  <h4 className="text-[10px] md:text-xs font-black text-white tracking-widest">Secure Dispatch</h4>
+                  <p className="text-[8px] md:text-[9px] font-black text-gray-500 tracking-widest mt-1">Verified Order Protocol</p>
                </div>
             </div>
           </div>
@@ -368,7 +368,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
               </button>
               <div>
                 <h1 className="text-3xl md:text-5xl font-black text-white italic tracking-tighter mb-1 uppercase leading-none">Payment <span className="text-quali-primary">Terminal</span></h1>
-                <p className="text-[9px] md:text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Step 2: Resource Allocation</p>
+                <p className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-[0.4em]">Step 2: Resource Allocation</p>
               </div>
            </div>
         </div>
@@ -395,16 +395,16 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                             e.currentTarget.src = 'https://images.pexels.com/photos/8867482/pexels-photo-8867482.jpeg?auto=compress&cs=tinysrgb&w=300&h=300&fit=crop';
                           }}
                         />
-                       <p className="text-[8px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest mt-4">Scan QR to Transfer</p>
+                       <p className="text-[8px] md:text-[10px] font-black text-gray-400 tracking-widest mt-4">Scan QR to Transfer</p>
                     </div>
 
                     <div className="space-y-2 md:space-y-3">
                        <div className="flex flex-col p-4 bg-white/5 rounded-xl border border-white/5">
-                          <span className="text-[8px] md:text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Account Holder</span>
+                          <span className="text-[8px] md:text-[9px] font-black text-gray-500 tracking-widest mb-1">Account Holder</span>
                           <span className="text-xs md:text-sm font-black text-white uppercase italic">{method.account_name}</span>
                        </div>
                        <div className="flex flex-col p-4 bg-white/5 rounded-xl border border-white/5">
-                          <span className="text-[8px] md:text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Reference Number</span>
+                          <span className="text-[8px] md:text-[9px] font-black text-gray-500 tracking-widest mb-1">Reference Number</span>
                           <span className="text-xs md:text-sm font-black text-white font-mono tracking-wider">{method.account_number}</span>
                        </div>
                     </div>

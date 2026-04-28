@@ -79,7 +79,8 @@ const AdminDashboard: React.FC = () => {
       }
       setCurrentView('items');
     } catch (error) {
-      alert('Failed to save item.');
+      console.error('Save failed:', error);
+      alert(`❌ Failed to save item: ${error instanceof Error ? error.message : 'Unknown database error'}`);
     } finally {
       setIsProcessing(false);
     }
@@ -207,7 +208,7 @@ const AdminDashboard: React.FC = () => {
         <div className="p-10 border-b border-white/10">
           <div className="flex flex-col items-center text-center">
             <div className="relative mb-4 group cursor-pointer">
-              <img src={siteSettings?.site_logo || "/logo.jpg"} alt="Logo" className="h-16 w-16 object-contain rounded-full border border-quali-primary/30" />
+              <img src={siteSettings?.site_logo || "/logo.jpg"} alt="Logo" className="h-16 w-16 object-cover rounded-full border border-quali-primary/30" />
             </div>
             <h1 className="text-2xl font-black text-white tracking-tighter uppercase font-pretendard">
               {siteSettings?.site_name === "QualiFuel" || !siteSettings?.site_name ? (
@@ -401,8 +402,11 @@ const AdminDashboard: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-12 pt-8">
                   {/* Variations */}
                   <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Flavor Variations</label>
+                    <div className="flex items-start justify-between">
+                      <div className="flex flex-col">
+                        <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Flavor Variations</label>
+                        <span className="text-[8px] text-gray-600 font-bold uppercase tracking-widest mt-0.5">Standard: 400x400px</span>
+                      </div>
                       <button onClick={addVariation} className="p-2 bg-quali-primary/10 text-quali-primary rounded-lg hover:bg-quali-primary/20 transition-all border border-quali-primary/20 flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest"><Plus className="h-3 w-3" /><span>Add Var</span></button>
                     </div>
                     <div className="space-y-3">

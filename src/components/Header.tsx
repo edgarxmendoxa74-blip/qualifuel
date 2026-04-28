@@ -30,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
                     <img 
                       src={siteSettings?.site_logo || "/logo.jpg"} 
                       alt="Qualifuel"
-                      className="h-9 w-9 md:h-11 md:w-11 object-contain rounded-full"
+                      className="h-9 w-9 md:h-11 md:w-11 object-cover rounded-full"
                       onError={(e) => { e.currentTarget.src = "/logo.jpg"; }}
                     />
                   </div>
@@ -51,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
                     )
                   )}
                 </h1>
-                <p className="text-[7px] md:text-[9px] font-bold text-quali-secondary tracking-[0.15em] uppercase mt-0.5 hidden xs:block">
+                <p className="text-[7px] md:text-[9px] font-bold text-quali-secondary tracking-[0.15em] mt-0.5 hidden xs:block">
                   {siteSettings?.site_description || "High Protein Meals"}
                 </p>
               </div>

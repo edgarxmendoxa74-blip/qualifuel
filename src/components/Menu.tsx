@@ -97,7 +97,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
     <>
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       {/* Hero Section */}
-      <div className="mb-12 bg-quali-dark rounded-[2.5rem] md:rounded-[3rem] shadow-2xl overflow-hidden relative border-2 border-quali-primary/30 min-h-[auto] lg:min-h-[400px] flex items-center">
+      <div className="mb-12 bg-quali-dark rounded-[2.5rem] md:rounded-[3rem] shadow-2xl overflow-hidden relative min-h-[auto] lg:min-h-[400px] flex items-center">
         <div className="max-w-7xl mx-auto px-6 py-12 md:px-10 relative z-10 w-full">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-12 items-center">
             
@@ -125,13 +125,13 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
-                <div className="bg-white/5 backdrop-blur-xl p-4 rounded-2xl border border-white/10 flex items-center space-x-4">
+                <div className="bg-white/5 backdrop-blur-xl p-4 rounded-2xl flex items-center space-x-4">
                   <div>
                     <h4 className="text-white font-black tracking-wider text-[10px] mb-0.5 whitespace-nowrap">Macro-Balanced</h4>
                     <p className="text-gray-400 text-[9px] font-medium leading-tight">Precisely calculated nutrients.</p>
                   </div>
                 </div>
-                <div className="bg-white/5 backdrop-blur-xl p-4 rounded-2xl border border-white/10 flex items-center space-x-4">
+                <div className="bg-white/5 backdrop-blur-xl p-4 rounded-2xl flex items-center space-x-4">
                   <div>
                     <h4 className="text-white font-black tracking-wider text-[10px] mb-0.5 whitespace-nowrap">Performance Fuel</h4>
                     <p className="text-gray-400 text-[9px] font-medium leading-tight">Elite sustainable energy.</p>
@@ -140,7 +140,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
               </div>
               
               {/* Short Info */}
-              <div className="flex flex-wrap gap-4 text-white/40 text-[9px] font-black tracking-widest pt-6 border-t border-white/10">
+              <div className="flex flex-wrap gap-4 text-white/40 text-[9px] font-black tracking-widest pt-6 border-white/10">
                 <span className="flex items-center">Mandaluyong</span>
                 <span className="flex items-center">7AM - 12AM</span>
               </div>
@@ -148,7 +148,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
 
             {/* Right Content - Compact Hero Image */}
             <div className="relative group animate-fade-in-right">
-              <div className="relative rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_0_60px_rgba(154,202,60,0.15)] border border-white/10 h-[250px] md:h-[350px]">
+              <div className="relative rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_0_60px_rgba(154,202,60,0.15)] h-[250px] md:h-[350px]">
                 <img 
                   src={siteSettings?.hero_banner || "/images/qualifuel-banner.png"} 
                   alt="Qualifuel Performance Meals"

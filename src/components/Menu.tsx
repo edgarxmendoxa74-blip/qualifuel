@@ -102,7 +102,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-12 items-center">
             
             {/* Left Content */}
-            <div className="text-left animate-fade-in-left">
+            <div className="text-center lg:text-left animate-fade-in-left">
               <div className="inline-block bg-quali-primary/10 border border-quali-primary/30 px-4 py-1.5 rounded-full mb-6 backdrop-blur-md">
                 <span className="text-quali-primary font-black tracking-[0.2em] text-[8px] md:text-[10px]">
                   {siteSettings?.hero_title || "Mandaluyong's Premier Meal Prep"}
@@ -124,7 +124,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
                 {siteSettings?.hero_subtitle || "High Protein Meals"}
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left">
                 <div className="bg-white/5 backdrop-blur-xl p-4 rounded-2xl flex items-center space-x-4">
                   <div>
                     <h4 className="text-white font-black tracking-wider text-[10px] mb-0.5 whitespace-nowrap">Macro-Balanced</h4>
@@ -140,7 +140,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
               </div>
               
               {/* Short Info */}
-              <div className="flex flex-wrap gap-4 text-white/40 text-[9px] font-black tracking-widest pt-6 border-white/10">
+              <div className="flex flex-wrap justify-center lg:justify-start gap-4 text-white/40 text-[9px] font-black tracking-widest pt-6 border-white/10">
                 <span className="flex items-center">Mandaluyong</span>
                 <span className="flex items-center">7AM - 12AM</span>
               </div>

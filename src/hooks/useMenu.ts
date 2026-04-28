@@ -12,7 +12,6 @@ export const useMenu = () => {
     try {
       setLoading(true);
       
-      // Fetch menu items with their variations and add-ons
       const { data: items, error: itemsError } = await supabase
         .from('menu_items')
         .select(`
@@ -25,7 +24,6 @@ export const useMenu = () => {
       if (itemsError) throw itemsError;
 
       const formattedItems: MenuItem[] = (items || []).map(item => {
-        // Calculate if discount is currently active
         const now = new Date();
         const discountStart = item.discount_start_date ? new Date(item.discount_start_date) : null;
         const discountEnd = item.discount_end_date ? new Date(item.discount_end_date) : null;
@@ -34,7 +32,6 @@ export const useMenu = () => {
           (!discountStart || now >= discountStart) && 
           (!discountEnd || now <= discountEnd);
         
-        // Calculate effective price
         const effectivePrice = isDiscountActive && item.discount_price ? item.discount_price : item.base_price;
 
         return {
@@ -67,8 +64,9 @@ export const useMenu = () => {
         };
       });
 
-      // Use sample products if database is empty
-      if (formattedItems.length === 0) {
+      // Only show sample products if it's the first fetch and the database is truly empty
+      // If items exist, or if we've already fetched before, don't revert to samples
+      if (formattedItems.length === 0 && !items) {
         setMenuItems(SAMPLE_PRODUCTS);
       } else {
         setMenuItems(formattedItems);
@@ -76,8 +74,8 @@ export const useMenu = () => {
       setError(null);
     } catch (err) {
       console.error('Error fetching menu items:', err);
-      // Fallback to sample products on error too, to ensure UI is usable
-      setMenuItems(SAMPLE_PRODUCTS);
+      // Only use samples as fallback if we have no state at all
+      setMenuItems(prev => prev.length === 0 ? SAMPLE_PRODUCTS : prev);
       setError(err instanceof Error ? err.message : 'Failed to fetch menu items');
     } finally {
       setLoading(false);

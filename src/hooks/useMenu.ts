@@ -238,11 +238,16 @@ export const useMenu = () => {
 
   const deleteMenuItem = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('menu_items')
-        .delete()
-        .eq('id', id);
+      // Delete related variations first
+      const { error: varError } = await supabase.from('variations').delete().eq('menu_item_id', id);
+      if (varError) console.warn('Warning: Failed to delete variations:', varError);
 
+      // Delete related add-ons
+      const { error: addOnError } = await supabase.from('add_ons').delete().eq('menu_item_id', id);
+      if (addOnError) console.warn('Warning: Failed to delete add-ons:', addOnError);
+
+      // Delete the menu item itself
+      const { error } = await supabase.from('menu_items').delete().eq('id', id);
       if (error) throw error;
 
       await fetchMenuItems();

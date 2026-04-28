@@ -98,15 +98,6 @@ const AdminDashboard: React.FC = () => {
     setFormData({ ...formData, variations: updatedVariations });
   };
 
-  const handleVariationImageUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      updateVariation(index, 'image', reader.result as string);
-    };
-    reader.readAsDataURL(file);
-  };
 
   const removeVariation = (index: number) => {
     const updatedVariations = formData.variations?.filter((_, i) => i !== index) || [];
@@ -406,28 +397,14 @@ const AdminDashboard: React.FC = () => {
                     <div className="flex items-start justify-between">
                       <div className="flex flex-col">
                         <label className="text-[10px] font-black text-gray-500 uppercase tracking-[0.3em]">Flavor Variations</label>
-                        <span className="text-[8px] text-gray-600 font-bold uppercase tracking-widest mt-0.5">Standard: 400x400px</span>
                       </div>
                       <button onClick={addVariation} className="p-2 bg-quali-primary/10 text-quali-primary rounded-lg hover:bg-quali-primary/20 transition-all border border-quali-primary/20 flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest"><Plus className="h-3 w-3" /><span>Add Var</span></button>
                     </div>
                     <div className="space-y-3">
                       {formData.variations?.map((v, i) => (
-                        <div key={v.id} className="flex items-center space-x-3 bg-white/5 p-3 rounded-xl border border-white/10">
-                          <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-white/10 flex-shrink-0 group border border-white/10 cursor-pointer">
-                            {v.image ? (
-                              <img src={v.image} className="w-full h-full object-cover" alt="Variation" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-gray-500">
-                                <ImageIcon className="h-4 w-4" />
-                              </div>
-                            )}
-                            <label className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 flex items-center justify-center cursor-pointer transition-opacity text-white hover:text-quali-primary">
-                              <Upload className="h-4 w-4" />
-                              <input type="file" accept="image/*" onChange={(e) => handleVariationImageUpload(i, e)} className="hidden" />
-                            </label>
-                          </div>
-                          <input type="text" value={v.name} onChange={(e) => updateVariation(i, 'name', e.target.value)} className="flex-1 bg-transparent border-none text-white text-xs focus:ring-0 px-2" placeholder="Variant Name" />
-                          <input type="number" value={v.price} onChange={(e) => updateVariation(i, 'price', Number(e.target.value))} className="w-20 bg-transparent border-none text-white text-xs focus:ring-0 text-right pr-2" placeholder="\u20b1" />
+                        <div key={v.id} className="flex items-center space-x-4 bg-white/5 p-4 rounded-2xl border border-white/10">
+                          <input type="text" value={v.name} onChange={(e) => updateVariation(i, 'name', e.target.value)} className="flex-1 bg-transparent border-none text-white font-bold text-xs focus:ring-0 px-2" placeholder="Variant Name" />
+                          <input type="number" value={v.price} onChange={(e) => updateVariation(i, 'price', Number(e.target.value))} className="w-24 bg-transparent border-none text-white font-black italic text-sm focus:ring-0 text-right pr-4 border-r border-white/10" placeholder="\u20b1" />
                           <button onClick={() => removeVariation(i)} className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><X className="h-4 w-4" /></button>
                         </div>
                       ))}

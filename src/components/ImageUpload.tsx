@@ -17,8 +17,8 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const { deleteImage } = useImageUpload();
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const MAX_FILE_SIZE_MB = 1;
-  const RECOMMENDED_WIDTH = 800;
+  const MAX_FILE_SIZE_MB = 5;
+  const RECOMMENDED_WIDTH = 2000;
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -36,29 +36,20 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
       reader.onload = (e) => {
         const img = new Image();
         img.onload = () => {
-          // Create canvas for resizing
-          const canvas = document.createElement('canvas');
-          let width = img.width;
-          let height = img.height;
+          // Crop to 1:1 aspect ratio
+          const size = Math.min(img.width, img.height);
+          const sx = (img.width - size) / 2;
+          const sy = (img.height - size) / 2;
 
-          // Calculate new dimensions (maintain aspect ratio)
-          if (width > RECOMMENDED_WIDTH || height > RECOMMENDED_WIDTH) {
-            if (width > height) {
-              height = Math.round((height * RECOMMENDED_WIDTH) / width);
-              width = RECOMMENDED_WIDTH;
-            } else {
-              width = Math.round((width * RECOMMENDED_WIDTH) / height);
-              height = RECOMMENDED_WIDTH;
-            }
-          }
+          const targetSize = RECOMMENDED_WIDTH;
 
-          canvas.width = width;
-          canvas.height = height;
+          canvas.width = targetSize;
+          canvas.height = targetSize;
           const ctx = canvas.getContext('2d');
           if (ctx) {
-            ctx.drawImage(img, 0, 0, width, height);
+            ctx.drawImage(img, sx, sy, size, size, 0, 0, targetSize, targetSize);
             // Use JPEG for better compression/smoothness
-            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
             onImageChange(compressedDataUrl);
           }
           setIsLoading(false);
@@ -140,7 +131,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 <ImageIcon className="h-10 w-10 text-gray-500" />
               </div>
               <p className="text-[10px] font-black text-white uppercase tracking-widest mb-1">📁 Upload Image</p>
-              <p className="text-[8px] font-black text-gray-600 uppercase tracking-widest">Standard size: 800x800px (1:1 Ratio)</p>
+              <p className="text-[8px] font-black text-gray-600 uppercase tracking-widest">Standard size: 2000x2000px (1:1 Ratio)</p>
             </>
           )}
         </div>

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Plus, Edit, Trash2, Save, X, ArrowLeft, CreditCard, Wallet, ShieldCheck, Zap } from 'lucide-react';
 import { usePaymentMethods, PaymentMethod } from '../hooks/usePaymentMethods';
 import ImageUpload from './ImageUpload';
+import Toast, { ToastType } from './Toast';
 
 interface PaymentMethodManagerProps {
   onBack: () => void;
@@ -21,6 +22,11 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
     sort_order: 0
   });
   const [isProcessing, setIsProcessing] = useState(false);
+  const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
+
+  const showToast = (message: string, type: ToastType = 'success') => {
+    setToast({ message, type });
+  };
 
   React.useEffect(() => {
     refetchAll();
@@ -58,8 +64,9 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
     if (confirm('Are you sure you want to delete this payment method? Global revenue stream will be impacted.')) {
       try {
         await deletePaymentMethod(id);
+        showToast('Gateway decommissioned');
       } catch (error) {
-        alert(error instanceof Error ? error.message : 'Failed to delete payment method');
+        showToast(error instanceof Error ? error.message : 'Failed to delete payment method', 'error');
       }
     }
   };
@@ -80,13 +87,15 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
       setIsProcessing(true);
       if (editingMethod) {
         await updatePaymentMethod(editingMethod.id, formData);
+        showToast('Gateway configuration secured');
       } else {
         await addPaymentMethod(formData);
+        showToast('New gateway node established');
       }
       setCurrentView('list');
       setEditingMethod(null);
     } catch (error) {
-      alert(error instanceof Error ? error.message : 'Failed to save payment method');
+      showToast(error instanceof Error ? error.message : 'Failed to save payment method', 'error');
     } finally {
       setIsProcessing(false);
     }
@@ -107,6 +116,7 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
 
   return (
     <div className="animate-fade-in text-pretendard">
+      {toast && <Toast message={toast.message} type={toast.type} onClose={() => setToast(null)} />}
       <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-16 gap-8">
         <div className="flex items-center space-x-6">
           <div className="bg-quali-primary/10 p-5 rounded-3xl border border-quali-primary/30 shadow-[0_0_30px_rgba(154,202,60,0.15)]">
@@ -117,12 +127,15 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
               <span className="text-white">Payment </span>
               <span className="text-quali-primary">Terminal</span>
             </h2>
-            <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.4em]">Transaction Gateway Control</p>
+            <p className="text-[10px] font-black text-gray-500 tracking-[0.4em]">Transaction Gateway Control</p>
           </div>
         </div>
         
         {currentView === 'list' ? (
           <div className="flex space-x-4 w-full lg:w-auto">
+            <button onClick={onBack} className="bg-white/5 text-white px-8 py-5 rounded-2xl lg:rounded-[1.5rem] hover:bg-white/10 transition-all font-black uppercase tracking-widest text-[10px] border border-white/10 flex items-center">
+              <ArrowLeft className="h-4 w-4 mr-2" /> Return
+            </button>
             <button onClick={handleAddMethod} className="flex-1 lg:flex-none bg-quali-gradient text-white px-10 py-5 rounded-2xl lg:rounded-[1.5rem] hover:scale-105 transition-all font-black uppercase tracking-widest text-xs border border-white/10 shadow-2xl">
               <Plus className="h-4 w-4 mr-2 inline" /> Add Gateway
             </button>
@@ -150,7 +163,7 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
           {paymentMethods.length === 0 ? (
             <div className="col-span-full py-32 text-center bg-white/[0.02] rounded-[3.5rem] border-2 border-dashed border-white/5">
               <CreditCard className="h-16 w-16 text-gray-600 mx-auto mb-6 opacity-30" />
-              <p className="text-gray-500 font-black uppercase tracking-[0.3em] text-xs mb-10">No transaction channels identified</p>
+              <p className="text-gray-500 font-black tracking-[0.3em] text-xs mb-10">No transaction channels identified</p>
               <button onClick={handleAddMethod} className="bg-quali-primary/10 text-quali-primary px-10 py-5 rounded-2xl border border-quali-primary/20 font-black uppercase tracking-widest text-xs hover:bg-quali-primary/20 transition-all">Provision Gateway</button>
             </div>
           ) : (
@@ -198,7 +211,7 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
                 
                 <div className="bg-black/30 rounded-2xl px-8 py-6 border border-white/5 flex items-center justify-between shadow-inner mt-auto">
                    <div className="min-w-0">
-                      <p className="text-[9px] font-black text-gray-600 mb-1 uppercase tracking-widest">Protocol Reference</p>
+                      <p className="text-[9px] font-black text-gray-600 mb-1 tracking-widest">Protocol Reference</p>
                       <p className="text-white font-mono font-bold tracking-[0.2em] text-lg lg:text-xl truncate">{method.account_number}</p>
                    </div>
                    <div className="h-10 w-10 bg-white/5 rounded-xl flex items-center justify-center border border-white/10">
@@ -213,21 +226,21 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 max-w-7xl mx-auto">
           <div className="lg:col-span-7 bg-white/5 backdrop-blur-xl p-10 md:p-16 rounded-[3.5rem] border border-white/10 space-y-12 shadow-2xl relative overflow-hidden">
             <div className="absolute top-0 left-0 w-full h-1 bg-quali-gradient"></div>
-            <p className="text-[10px] font-black text-quali-primary uppercase tracking-[0.4em]">Resource Specification</p>
+            <p className="text-[10px] font-black text-quali-primary tracking-[0.4em]">Resource Specification</p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Channel Alias</label>
+                <label className="text-[10px] font-black text-gray-500 tracking-widest ml-4">Channel Alias</label>
                 <input type="text" value={formData.name} onChange={(e) => handleNameChange(e.target.value)} className="w-full bg-black/40 border border-white/5 rounded-2xl px-8 py-5 text-white focus:ring-2 focus:ring-quali-primary/50 text-lg font-black italic uppercase placeholder-gray-800" placeholder="e.g. GCASH TERMINAL" />
               </div>
               <div className="space-y-4">
-                <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Allocation ID</label>
+                <label className="text-[10px] font-black text-gray-500 tracking-widest ml-4">Allocation ID</label>
                 <input type="text" value={formData.id} onChange={(e) => setFormData({ ...formData, id: e.target.value })} className="w-full bg-black/20 border border-white/5 rounded-2xl px-8 py-5 text-white text-xs font-bold opacity-50 font-mono" placeholder="auto-generated" disabled={currentView === 'edit'} />
               </div>
             </div>
 
             <div className="space-y-4">
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Account Protocol Reference</label>
+              <label className="text-[10px] font-black text-gray-500 tracking-widest ml-4">Account Protocol Reference</label>
               <div className="relative">
                  <CreditCard className="absolute left-6 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-600" />
                  <input type="text" value={formData.account_number} onChange={(e) => setFormData({ ...formData, account_number: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl pl-16 pr-8 py-6 text-white focus:ring-2 focus:ring-quali-primary/50 font-mono text-xl font-bold tracking-widest" placeholder="09XX XXX XXXX" />
@@ -235,7 +248,7 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
             </div>
 
             <div className="space-y-4">
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Designated Signatory</label>
+              <label className="text-[10px] font-black text-gray-500 tracking-widest ml-4">Designated Signatory</label>
               <input type="text" value={formData.account_name} onChange={(e) => setFormData({ ...formData, account_name: e.target.value })} className="w-full bg-black/40 border border-white/5 rounded-2xl px-8 py-5 text-white focus:ring-2 focus:ring-quali-primary/50 text-base font-black italic uppercase placeholder-gray-800" placeholder="Account Holder Name" />
             </div>
 
@@ -259,7 +272,7 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
 
           <div className="lg:col-span-5 space-y-10">
             <div className="bg-white/5 backdrop-blur-xl p-10 md:p-12 rounded-[3.5rem] border border-white/10 shadow-2xl">
-              <p className="text-[10px] font-black text-quali-primary uppercase tracking-[0.4em] mb-10">Verification Protocol (QR)</p>
+              <p className="text-[10px] font-black text-quali-primary tracking-[0.4em] mb-10">Verification Protocol (QR)</p>
               <div className="bg-white rounded-3xl p-6 mb-8 relative overflow-hidden group shadow-2xl">
                 <ImageUpload
                   currentImage={formData.qr_code_url}
@@ -277,12 +290,12 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
             <div className="bg-white/5 backdrop-blur-xl p-10 rounded-[3.5rem] border border-white/10 space-y-8 shadow-2xl">
                <div className="flex flex-col md:flex-row items-center gap-8">
                   <div className="flex-1 space-y-4 w-full">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4">Dispatch Rank</label>
+                    <label className="text-[10px] font-black text-gray-500 tracking-widest ml-4">Dispatch Rank</label>
                     <input type="number" value={formData.sort_order} onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })} className="w-full bg-black/40 border border-white/5 rounded-2xl px-8 py-5 text-white text-center text-2xl font-black italic" />
                   </div>
                   
                   <div className="flex-1 w-full">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest ml-4 mb-4 block">Node Status</label>
+                    <label className="text-[10px] font-black text-gray-500 tracking-widest ml-4 mb-4 block">Node Status</label>
                     <label className="flex items-center justify-center p-5 bg-black/40 rounded-2xl border border-white/5 cursor-pointer group transition-all hover:bg-white/5">
                       <div className={`w-8 h-8 rounded-lg border-2 transition-all flex items-center justify-center relative ${formData.active ? 'bg-quali-primary border-quali-primary shadow-[0_0_15px_rgba(154,202,60,0.4)]' : 'border-gray-700 bg-white/5 group-hover:border-gray-500'}`}>
                         {formData.active && <Save className="h-4 w-4 text-white" />}
@@ -296,7 +309,7 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
 
             <div className="bg-quali-primary/5 p-8 rounded-[2.5rem] border border-dashed border-quali-primary/20 text-center">
                <ShieldCheck className="h-8 w-8 text-quali-primary/40 mx-auto mb-4" />
-               <p className="text-[9px] font-black text-gray-500 uppercase tracking-[0.2em] leading-relaxed">
+               <p className="text-[9px] font-black text-gray-500 tracking-[0.2em] leading-relaxed">
                   Encryption active. All transaction specification updates are logged in the secure admin vault.
                </p>
             </div>

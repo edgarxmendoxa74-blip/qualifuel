@@ -10,7 +10,7 @@ export const SAMPLE_PRODUCTS: MenuItem[] = [
     category: 'food',
     popular: true,
     available: true,
-    image: '/images/protein-salad.png',
+    image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&q=80&w=1000',
     effectivePrice: 250
   },
   {
@@ -21,7 +21,7 @@ export const SAMPLE_PRODUCTS: MenuItem[] = [
     category: 'food',
     popular: true,
     available: true,
-    image: '/images/beef-tapa.png',
+    image: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&q=80&w=1000',
     effectivePrice: 180
   },
   {

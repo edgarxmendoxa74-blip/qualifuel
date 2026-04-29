@@ -17,23 +17,60 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const { deleteImage } = useImageUpload();
   const [isLoading, setIsLoading] = React.useState(false);
 
+  const MAX_FILE_SIZE_MB = 1;
+  const RECOMMENDED_WIDTH = 800;
+
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
+    // Check file size (informational only, resizing will handle the rest)
+    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
+      alert(`File is over ${MAX_FILE_SIZE_MB}MB. We will compress it for you, but for best quality, try a smaller file.`);
+    }
+
     setIsLoading(true);
 
-    // Use Base64 encoding for immediate preview (works without server)
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      onImageChange(reader.result as string);
+    try {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          // Create canvas for resizing
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // Calculate new dimensions (maintain aspect ratio)
+          if (width > RECOMMENDED_WIDTH || height > RECOMMENDED_WIDTH) {
+            if (width > height) {
+              height = Math.round((height * RECOMMENDED_WIDTH) / width);
+              width = RECOMMENDED_WIDTH;
+            } else {
+              width = Math.round((width * RECOMMENDED_WIDTH) / height);
+              height = RECOMMENDED_WIDTH;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            ctx.drawImage(img, 0, 0, width, height);
+            // Use JPEG for better compression/smoothness
+            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.7);
+            onImageChange(compressedDataUrl);
+          }
+          setIsLoading(false);
+        };
+        img.src = e.target?.result as string;
+      };
+      reader.readAsDataURL(file);
+    } catch (error) {
+      console.error('Image processing failed:', error);
+      alert('Failed to process image');
       setIsLoading(false);
-    };
-    reader.onerror = () => {
-      alert('Failed to read image file');
-      setIsLoading(false);
-    };
-    reader.readAsDataURL(file);
+    }
 
     // Reset file input
     if (fileInputRef.current) {

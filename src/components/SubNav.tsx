@@ -20,31 +20,19 @@ const SubNav: React.FC<SubNavProps> = ({ selectedCategory, onCategoryClick }) =>
               ))}
             </div>
           ) : (
-            <>
+            categories.map((c) => (
               <button
-                onClick={() => onCategoryClick('all')}
-                className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest transition-all duration-300 border-2 ${
-                  selectedCategory === 'all'
+                key={c.id}
+                onClick={() => onCategoryClick(c.id)}
+                className={`px-4 py-1.5 rounded-full text-[9px] font-black tracking-widest transition-all duration-300 border-2 flex items-center space-x-2 whitespace-nowrap ${
+                  selectedCategory === c.id
                     ? 'bg-quali-primary text-black border-quali-primary shadow-sm scale-105'
                     : 'bg-white/5 text-white border-white/5 hover:border-quali-primary/50 hover:text-quali-primary'
                 }`}
               >
-                All
+                <span className="font-noto-kr">{c.name}</span>
               </button>
-              {categories.map((c) => (
-                <button
-                  key={c.id}
-                  onClick={() => onCategoryClick(c.id)}
-                  className={`px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest transition-all duration-300 border-2 flex items-center space-x-2 whitespace-nowrap ${
-                    selectedCategory === c.id
-                      ? 'bg-quali-primary text-black border-quali-primary shadow-sm scale-105'
-                      : 'bg-white/5 text-white border-white/5 hover:border-quali-primary/50 hover:text-quali-primary'
-                  }`}
-                >
-                  <span className="font-noto-kr">{c.name}</span>
-                </button>
-              ))}
-            </>
+            ))
           )}
         </div>
       </div>

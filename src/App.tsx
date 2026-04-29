@@ -14,7 +14,15 @@ function MainApp() {
   const cart = useCart();
   const { menuItems } = useMenu();
   const [currentView, setCurrentView] = React.useState<'menu' | 'cart' | 'checkout'>('menu');
-  const [selectedCategory, setSelectedCategory] = React.useState('all');
+  const [selectedCategory, setSelectedCategory] = React.useState('');
+
+  // Auto-select first category if none is selected
+  React.useEffect(() => {
+    if (!selectedCategory && menuItems.length > 0) {
+      const firstCategory = menuItems[0]?.category;
+      if (firstCategory) setSelectedCategory(firstCategory);
+    }
+  }, [menuItems, selectedCategory]);
 
   const handleViewChange = (view: 'menu' | 'cart' | 'checkout') => {
     setCurrentView(view);

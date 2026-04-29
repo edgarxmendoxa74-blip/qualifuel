@@ -17,7 +17,7 @@ export const useCategories = () => {
   const [error, setError] = useState<string | null>(null);
   const [showOnlyActive, setShowOnlyActive] = useState(true);
 
-  const fetchCategories = async (onlyActive = showOnlyActive) => {
+  const fetchCategories = async (onlyActive = showOnlyActive, retryCount = 0) => {
     try {
       setLoading(true);
       setShowOnlyActive(onlyActive);
@@ -41,8 +41,16 @@ export const useCategories = () => {
 
       setCategories(uniqueCategories);
       setError(null);
-    } catch (err) {
+    } catch (err: any) {
       console.error('Error fetching categories:', err);
+      
+      // Retry logic for timeouts
+      if ((err.code === '57014' || err.message?.includes('timeout')) && retryCount < 2) {
+        console.log(`Retrying fetch categories... Attempt ${retryCount + 1}`);
+        setTimeout(() => fetchCategories(onlyActive, retryCount + 1), 1000);
+        return;
+      }
+      
       setError(err instanceof Error ? err.message : 'Failed to fetch categories');
     } finally {
       setLoading(false);

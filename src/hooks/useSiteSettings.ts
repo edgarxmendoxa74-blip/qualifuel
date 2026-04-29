@@ -1,13 +1,13 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
-import { SiteSettings, SiteSetting } from '../types';
+import { SiteSettings } from '../types';
 
 export const useSiteSettings = () => {
   const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchSiteSettings = async () => {
+  const fetchSiteSettings = async (retryCount = 0) => {
     try {
       setLoading(true);
       setError(null);
@@ -15,70 +15,50 @@ export const useSiteSettings = () => {
       const { data, error } = await supabase
         .from('site_settings')
         .select('*')
-        .order('id');
+        .eq('id', 'global')
+        .single();
 
-      if (error) throw error;
+      if (error && error.code !== 'PGRST116') throw error; // PGRST116 is "not found"
 
-      // Transform the data into a more usable format
-      const settings: SiteSettings = {
-        site_name: data.find(s => s.id === 'site_name')?.value || 'QualiFuel',
-        site_logo: data.find(s => s.id === 'site_logo')?.value || '',
-        site_description: data.find(s => s.id === 'site_description')?.value || '',
-        currency: data.find(s => s.id === 'currency')?.value || 'PHP',
-        currency_code: data.find(s => s.id === 'currency_code')?.value || 'PHP',
-        hero_title: data.find(s => s.id === 'hero_title')?.value || 'QualiFuel',
-        hero_subtitle: data.find(s => s.id === 'hero_subtitle')?.value || 'High Protein Meals',
-        hero_text: data.find(s => s.id === 'hero_text')?.value || 'Fuel Your Potential.',
-        hero_banner: data.find(s => s.id === 'hero_banner')?.value || '/images/qualifuel-banner.png'
-      };
-
-      setSiteSettings(settings);
-    } catch (err) {
+      if (data) {
+        setSiteSettings({
+          site_name: data.site_name || 'QualiFuel',
+          site_logo: data.site_logo || '',
+          site_description: data.site_description || '',
+          currency: data.currency || '₱',
+          currency_code: data.currency_code || 'PHP',
+          hero_title: data.hero_title || 'QualiFuel',
+          hero_subtitle: data.hero_subtitle || 'High Protein Meals',
+          hero_text: data.hero_text || 'Fuel Your Potential.',
+          hero_banner: data.hero_banner || '/images/qualifuel-banner.png'
+        });
+      }
+    } catch (err: any) {
       console.error('Error fetching site settings:', err);
+      
+      if ((err.code === '57014' || err.message?.includes('timeout')) && retryCount < 2) {
+        setTimeout(() => fetchSiteSettings(retryCount + 1), 1000);
+        return;
+      }
+      
       setError(err instanceof Error ? err.message : 'Failed to fetch site settings');
     } finally {
       setLoading(false);
     }
   };
 
-  const updateSiteSetting = async (id: string, value: string) => {
-    try {
-      setError(null);
-
-      const { error } = await supabase
-        .from('site_settings')
-        .upsert({ id, value }, { onConflict: 'id' });
-
-      if (error) throw error;
-
-      // Refresh the settings
-      await fetchSiteSettings();
-    } catch (err) {
-      console.error('Error updating site setting:', err);
-      setError(err instanceof Error ? err.message : 'Failed to update site setting');
-      throw err;
-    }
-  };
-
   const updateSiteSettings = async (updates: Partial<SiteSettings>) => {
     try {
       setError(null);
-
-      const updatePromises = Object.entries(updates).map(([key, value]) =>
-        supabase
-          .from('site_settings')
-          .upsert({ id: key, value }, { onConflict: 'id' })
-      );
-
-      const results = await Promise.all(updatePromises);
       
-      // Check for errors
-      const errors = results.filter(result => result.error);
-      if (errors.length > 0) {
-        throw new Error('Some updates failed');
-      }
+      const { error } = await supabase
+        .from('site_settings')
+        .upsert({ 
+          id: 'global',
+          ...updates 
+        }, { onConflict: 'id' });
 
-      // Refresh the settings
+      if (error) throw error;
       await fetchSiteSettings();
     } catch (err) {
       console.error('Error updating site settings:', err);
@@ -95,7 +75,6 @@ export const useSiteSettings = () => {
     siteSettings,
     loading,
     error,
-    updateSiteSetting,
     updateSiteSettings,
     refetch: fetchSiteSettings
   };

@@ -8,22 +8,25 @@ export const useMenu = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const fetchMenuItems = async () => {
+  const fetchMenuItems = async (retryCount = 0) => {
     try {
       setLoading(true);
+      setError(null);
       
-      const { data: items, error: itemsError } = await supabase
+      // PHASE 1: Fetch metadata only (fast, no heavy blobs)
+      const { data: metadata, error: metaError } = await supabase
         .from('menu_items')
         .select(`
-          *,
+          id, name, description, base_price, category, popular, available, 
+          discount_price, discount_start_date, discount_end_date, discount_active,
           variations (*),
           add_ons (*)
         `)
         .order('created_at', { ascending: true });
 
-      if (itemsError) throw itemsError;
+      if (metaError) throw metaError;
 
-      const formattedItems: MenuItem[] = (items || []).map(item => {
+      const formattedItems: MenuItem[] = (metadata || []).map(item => {
         const now = new Date();
         const discountStart = item.discount_start_date ? new Date(item.discount_start_date) : null;
         const discountEnd = item.discount_end_date ? new Date(item.discount_end_date) : null;
@@ -31,18 +34,20 @@ export const useMenu = () => {
         const isDiscountActive = item.discount_active && 
           (!discountStart || now >= discountStart) && 
           (!discountEnd || now <= discountEnd);
-        
-        const effectivePrice = isDiscountActive && item.discount_price ? item.discount_price : item.base_price;
+
+        const effectivePrice = isDiscountActive && item.discount_price 
+          ? Number(item.discount_price) 
+          : Number(item.base_price);
 
         return {
           id: item.id,
           name: item.name,
           description: item.description,
-          basePrice: item.base_price,
+          basePrice: Number(item.base_price) || 0,
           category: item.category,
           popular: item.popular,
           available: item.available ?? true,
-          image: item.image_url || undefined,
+          image: undefined, 
           discountPrice: item.discount_price || undefined,
           discountStartDate: item.discount_start_date || undefined,
           discountEndDate: item.discount_end_date || undefined,
@@ -53,30 +58,52 @@ export const useMenu = () => {
             id: v.id,
             name: v.name,
             price: v.price,
-            image: v.image || undefined
+            image: v.image
           })) || [],
           addOns: item.add_ons?.map((a: any) => ({
             id: a.id,
             name: a.name,
             price: a.price,
-            category: a.category
+            category: a.category,
+            image: a.image
           })) || []
         };
       });
 
-      // Only show sample products if it's the first fetch and the database is truly empty
-      // If items exist, or if we've already fetched before, don't revert to samples
-      if (formattedItems.length === 0 && !items) {
-        setMenuItems(SAMPLE_PRODUCTS);
-      } else {
-        setMenuItems(formattedItems);
+      // Set initial items so the menu appears
+      setMenuItems(formattedItems);
+
+      // PHASE 2: Fetch images sequentially to prevent any 500 timeouts
+      // This is the safest way to handle very large base64 strings
+      const itemIds = formattedItems.map(item => item.id);
+      
+      for (const id of itemIds) {
+        const { data: imageData, error: imageError } = await supabase
+          .from('menu_items')
+          .select('id, image_url')
+          .eq('id', id)
+          .single();
+
+        if (!imageError && imageData) {
+          setMenuItems(prev => prev.map(item => 
+            item.id === id 
+              ? { ...item, image: imageData.image_url || undefined } 
+              : item
+          ));
+        }
       }
+
       setError(null);
-    } catch (err) {
-      console.error('Error fetching menu items:', err);
-      // Only use samples as fallback if we have no state at all
+    } catch (err: any) {
+      console.error('Error in sequential fetch:', err);
+      
+      if ((err.code === '57014' || err.message?.includes('timeout')) && retryCount < 2) {
+        setTimeout(() => fetchMenuItems(retryCount + 1), 2000);
+        return;
+      }
+      
       setMenuItems(prev => prev.length === 0 ? SAMPLE_PRODUCTS : prev);
-      setError(err instanceof Error ? err.message : 'Failed to fetch menu items');
+      setError(err instanceof Error ? err.message : 'Database synchronization failed');
     } finally {
       setLoading(false);
     }
@@ -112,46 +139,28 @@ export const useMenu = () => {
 
       if (!menuItem) throw new Error('No data returned after item insertion');
 
-      // 2. Insert variations sequentially to ensure we don't hit race conditions or bulk limits
+      // 2. Insert variations and add-ons in parallel
+      const subItemPromises: Promise<any>[] = [];
+
       if (item.variations && item.variations.length > 0) {
-        const { error: variationsError } = await supabase
-          .from('variations')
-          .insert(
-            item.variations.map(v => ({
-              menu_item_id: menuItem.id,
-              name: v.name,
-              price: v.price,
-              image: v.image || null
-            }))
+        subItemPromises.push((async () => {
+          const { error } = await supabase.from('variations').insert(
+            item.variations!.map(v => ({ menu_item_id: menuItem.id, name: v.name, price: v.price }))
           );
-
-        if (variationsError) {
-          console.error('DB Error inserting variations:', variationsError);
-          // Optional: we could delete the menu item here to rollback, 
-          // but for now we'll just throw so the user knows it failed partially
-          throw new Error(`Variations insertion failed: ${variationsError.message}`);
-        }
+          if (error) throw error;
+        })());
       }
 
-      // 3. Insert add-ons
       if (item.addOns && item.addOns.length > 0) {
-        const { error: addOnsError } = await supabase
-          .from('add_ons')
-          .insert(
-            item.addOns.map(a => ({
-              menu_item_id: menuItem.id,
-              name: a.name,
-              price: a.price,
-              category: a.category || 'extras'
-            }))
+        subItemPromises.push((async () => {
+          const { error } = await supabase.from('add_ons').insert(
+            item.addOns!.map(a => ({ menu_item_id: menuItem.id, name: a.name, price: a.price, category: a.category || 'extras' }))
           );
-
-        if (addOnsError) {
-          console.error('DB Error inserting add-ons:', addOnsError);
-          throw new Error(`Add-ons insertion failed: ${addOnsError.message}`);
-        }
+          if (error) throw error;
+        })());
       }
 
+      await Promise.all(subItemPromises);
       await fetchMenuItems();
       return menuItem;
     } catch (err) {
@@ -162,6 +171,9 @@ export const useMenu = () => {
 
   const updateMenuItem = async (id: string, updates: Partial<MenuItem>) => {
     try {
+      if (id.startsWith('sample-')) {
+        throw new Error('Cannot update sample data. Please save as a new item.');
+      }
       // 1. Prepare update object (only include defined fields to avoid accidental nulls)
       const updateData: any = {};
       if (updates.name !== undefined) updateData.name = updates.name;
@@ -187,46 +199,37 @@ export const useMenu = () => {
         throw new Error(`Basic info update failed: ${itemError.message}`);
       }
 
-      // 3. Update variations (Delete and Replace approach)
+      // 3. Update variations and add-ons in parallel
+      const updatePromises: Promise<any>[] = [];
+
       if (updates.variations !== undefined) {
-        const { error: delVarError } = await supabase.from('variations').delete().eq('menu_item_id', id);
-        if (delVarError) console.warn('Warning: Failed to clear old variations:', delVarError);
-
-        if (updates.variations.length > 0) {
-          const { error: insVarError } = await supabase
-            .from('variations')
-            .insert(
-              updates.variations.map(v => ({
-                menu_item_id: id,
-                name: v.name,
-                price: v.price,
-                image: v.image || null
-              }))
+        updatePromises.push((async () => {
+          await supabase.from('variations').delete().eq('menu_item_id', id);
+          if (updates.variations!.length > 0) {
+            const { error } = await supabase.from('variations').insert(
+              updates.variations!.map(v => ({ menu_item_id: id, name: v.name, price: v.price }))
             );
-          if (insVarError) throw new Error(`Failed to insert new variations: ${insVarError.message}`);
-        }
+            if (error) throw error;
+          }
+        })());
       }
 
-      // 4. Update add-ons
       if (updates.addOns !== undefined) {
-        const { error: delAddError } = await supabase.from('add_ons').delete().eq('menu_item_id', id);
-        if (delAddError) console.warn('Warning: Failed to clear old add-ons:', delAddError);
-
-        if (updates.addOns.length > 0) {
-          const { error: insAddError } = await supabase
-            .from('add_ons')
-            .insert(
-              updates.addOns.map(a => ({
-                menu_item_id: id,
-                name: a.name,
-                price: a.price,
-                category: a.category || 'extras'
-              }))
+        updatePromises.push((async () => {
+          await supabase.from('add_ons').delete().eq('menu_item_id', id);
+          if (updates.addOns!.length > 0) {
+            const { error } = await supabase.from('add_ons').insert(
+              updates.addOns!.map(a => ({ menu_item_id: id, name: a.name, price: a.price, category: a.category || 'extras' }))
             );
-          if (insAddError) throw new Error(`Failed to insert new add-ons: ${insAddError.message}`);
-        }
+            if (error) throw error;
+          }
+        })());
       }
 
+      await Promise.all(updatePromises);
+      
+      // Perform fetch in background but return immediately if needed
+      // Actually, we'll keep the await here but the individual parts are faster now.
       await fetchMenuItems();
     } catch (err) {
       console.error('Error in updateMenuItem:', err);

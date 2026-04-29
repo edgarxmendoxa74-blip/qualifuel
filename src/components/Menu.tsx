@@ -99,15 +99,11 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
       {/* Hero Section */}
       <div className="mb-12 bg-quali-dark rounded-[2.5rem] md:rounded-[3rem] shadow-2xl overflow-hidden relative min-h-[auto] lg:min-h-[400px] flex items-center">
         <div className="max-w-7xl mx-auto px-6 py-12 md:px-10 relative z-10 w-full">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-12 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-20 items-center">
             
             {/* Left Content */}
             <div className="text-center lg:text-left animate-fade-in-left">
-              <div className="inline-block bg-quali-primary/10 border border-quali-primary/30 px-4 py-1.5 rounded-full mb-6 backdrop-blur-md">
-                <span className="text-quali-primary font-black tracking-[0.2em] text-[8px] md:text-[10px]">
-                  {siteSettings?.hero_title || "Mandaluyong's Premier Meal Prep"}
-                </span>
-              </div>
+
               
               <h2 className="text-5xl md:text-7xl xl:text-8xl font-pretendard font-black text-white mb-4 tracking-tighter leading-none uppercase">
                 {siteSettings?.site_name === "QualiFuel" || !siteSettings?.site_name ? (
@@ -124,7 +120,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
                 {siteSettings?.hero_subtitle || "High Protein Meals"}
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left">
+              <div className="hidden md:grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 text-left">
                 <div className="bg-white/5 backdrop-blur-xl p-4 rounded-2xl flex items-center space-x-4">
                   <div>
                     <h4 className="text-white font-black tracking-wider text-[10px] mb-0.5 whitespace-nowrap">Macro-Balanced</h4>
@@ -148,19 +144,14 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
 
             {/* Right Content - Compact Hero Image */}
             <div className="relative group animate-fade-in-right">
-              <div className="relative rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_0_60px_rgba(154,202,60,0.15)] h-[250px] md:h-[350px]">
+              <div className="relative rounded-[2rem] md:rounded-[2.5rem] overflow-hidden shadow-[0_0_60px_rgba(154,202,60,0.15)] bg-white/5">
                 <img 
                   src={siteSettings?.hero_banner || "/images/qualifuel-banner.png"} 
                   alt="Qualifuel Performance Meals"
-                  className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-[3000ms]"
+                  className="w-full h-auto block transform group-hover:scale-105 transition-transform duration-[3000ms]"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
-                
-                <div className="absolute bottom-6 left-6 right-6">
-                  <h4 className="text-white font-black italic tracking-tight text-lg md:text-xl leading-tight">
-                    {siteSettings?.hero_text || "Fuel Your Potential."}
-                  </h4>
-                </div>
+
               </div>
             </div>
           </div>
@@ -186,35 +177,60 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
           ))}
         </div>
       ) : (
-        filteredCategories.map((category) => {
-        const categoryItems = menuItems.filter(item => item.category === category.id);
-        
-        if (categoryItems.length === 0) return null;
-        
-        return (
-          <section key={category.id} id={category.id} className="mb-16">
-            {/* Hide category headers on mobile since they're in the sticky nav */}
-            <div className="hidden md:flex items-center mb-8">
-              <h3 className="text-3xl font-noto-kr font-medium text-black">{category.name}</h3>
-            </div>
+        <>
+          {categories.filter(category => selectedCategory === 'all' || category.id === selectedCategory).map((category) => {
+            const categoryItems = menuItems.filter(item => item.category === category.id);
+            if (categoryItems.length === 0) return null;
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {categoryItems.map((item) => {
-                const cartItem = cartItems.find(cartItem => cartItem.id === item.id);
-                return (
+            return (
+              <section key={category.id} id={category.id} className="mb-24 animate-fade-in">
+                <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b-2 border-white/5 pb-8 gap-6">
+                  <div>
+                    <h3 className="text-5xl md:text-6xl font-black text-white italic uppercase tracking-tighter leading-none">
+                      {category.name}
+                    </h3>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10">
+                  {categoryItems.map((item) => (
+                    <MenuItemCard
+                      key={item.id}
+                      item={item}
+                      onAddToCart={addToCart}
+                      quantity={cartItems.find(ci => ci.id === item.id)?.quantity || 0}
+                      onUpdateQuantity={updateQuantity}
+                    />
+                  ))}
+                </div>
+              </section>
+            );
+          })}
+
+          {/* Fallback for items with missing/invalid categories */}
+          {menuItems.filter(item => !categories.some(c => c.id === item.category)).length > 0 && (
+            <section id="uncategorized" className="mb-24 animate-fade-in">
+              <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b-2 border-white/5 pb-8 gap-6 text-gray-500">
+                <div>
+                  <h3 className="text-4xl md:text-5xl font-black italic uppercase tracking-tighter leading-none">
+                    Other Provisions
+                  </h3>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10 opacity-80">
+                {menuItems.filter(item => !categories.some(c => c.id === item.category)).map((item) => (
                   <MenuItemCard
                     key={item.id}
                     item={item}
                     onAddToCart={addToCart}
-                    quantity={cartItem?.quantity || 0}
+                    quantity={cartItems.find(ci => ci.id === item.id)?.quantity || 0}
                     onUpdateQuantity={updateQuantity}
                   />
-                );
-              })}
-            </div>
-          </section>
-        );
-      })
+                ))}
+              </div>
+            </section>
+          )}
+        </>
       )}
       </main>
     </>

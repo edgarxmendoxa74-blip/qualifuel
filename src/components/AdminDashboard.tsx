@@ -321,7 +321,13 @@ const AdminDashboard: React.FC = () => {
                   <div key={item.id} className="group bg-white/5 border border-white/10 rounded-[1.5rem] overflow-hidden hover:bg-white/[0.08] transition-all hover:shadow-2xl hover:shadow-quali-primary/10">
                     <div className="relative h-40 bg-white/5 overflow-hidden">
                       {item.image ? (
-                        <img src={item.image} alt={item.name} className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-700" />
+                        <img 
+                          src={item.image} 
+                          alt={item.name} 
+                          className="w-full h-full object-contain transform group-hover:scale-110 transition-transform duration-700" 
+                          loading="lazy"
+                          decoding="async"
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center opacity-20">
                           <Package className="h-10 w-10" />

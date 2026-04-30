@@ -5,16 +5,7 @@ import { useSiteSettings } from '../hooks/useSiteSettings';
 import MenuItemCard from './MenuItemCard';
 
 
-// Preload images for better performance
-const preloadImages = (items: MenuItem[]) => {
-  items.forEach(item => {
-    if (item.image) {
-      const img = new Image();
-      img.src = item.image;
-    }
-  });
-};
-
+// Removed Base64 image preloading to prevent main thread blocking
 interface MenuProps {
   menuItems: MenuItem[];
   addToCart: (item: MenuItem, quantity?: number, variation?: any, addOns?: any[]) => void;
@@ -31,21 +22,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
   // Memoize filtered categories to avoid unnecessary recalculations
 
 
-  // Preload images when menu items change
-  React.useEffect(() => {
-    if (menuItems.length > 0) {
-      // Preload images for visible category first
-      const visibleItems = menuItems.filter(item => item.category === activeCategory);
-      preloadImages(visibleItems);
-      
-      // Then preload other images after a short delay
-      setTimeout(() => {
-        const otherItems = menuItems.filter(item => item.category !== activeCategory);
-        preloadImages(otherItems);
-      }, 1000);
-    }
-  }, [menuItems, activeCategory]);
-
+  // Removed useEffect for preloading images to prevent blocking the main thread with heavy Base64 decodes.
 
 
   React.useEffect(() => {

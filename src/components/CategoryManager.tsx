@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Plus, Edit, Trash2, Save, X, ArrowLeft, FolderOpen, Zap } from 'lucide-react';
 import { useCategories, Category } from '../hooks/useCategories';
-import ImageUpload from './ImageUpload';
+
 import Toast, { ToastType } from './Toast';
 
 interface CategoryManagerProps {
@@ -181,8 +181,8 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ onBack }) => {
                         </div>
                     </div>
                     <div className="flex space-x-2">
-                       <button onClick={() => handleEditCategory(category)} className="p-3 bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all border border-white/5"><Edit className="h-4 w-4" /></button>
-                       <button onClick={() => handleDeleteCategory(category.id)} className="p-3 bg-red-500/5 text-red-500/50 hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all border border-red-500/10"><Trash2 className="h-4 w-4" /></button>
+                       <button title="Edit" onClick={() => handleEditCategory(category)} className="p-3 bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all border border-white/5"><Edit className="h-4 w-4" /></button>
+                       <button title="Delete" onClick={() => handleDeleteCategory(category.id)} className="p-3 bg-red-500/5 text-red-500/50 hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all border border-red-500/10"><Trash2 className="h-4 w-4" /></button>
                     </div>
                   </div>
                   
@@ -217,7 +217,7 @@ const CategoryManager: React.FC<CategoryManagerProps> = ({ onBack }) => {
                 <label className="text-[10px] font-black text-gray-500 tracking-[0.3em] ml-2">Logistics Priority Rank</label>
                 <div className="relative">
                    <Zap className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-quali-primary opacity-50" />
-                   <input type="number" value={formData.sort_order} onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })} className="w-full bg-black/40 border border-white/5 rounded-2xl pl-16 pr-8 py-5 text-white text-xl font-black italic" />
+                   <input title="Logistics Priority Rank" type="number" value={formData.sort_order} onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })} className="w-full bg-black/40 border border-white/5 rounded-2xl pl-16 pr-8 py-5 text-white text-xl font-black italic" />
                 </div>
               </div>
             </div>

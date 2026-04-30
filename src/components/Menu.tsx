@@ -3,7 +3,7 @@ import { MenuItem, CartItem } from '../types';
 import { useCategories } from '../hooks/useCategories';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import MenuItemCard from './MenuItemCard';
-import MobileNav from './MobileNav';
+
 
 // Preload images for better performance
 const preloadImages = (items: MenuItem[]) => {
@@ -29,9 +29,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
   const [activeCategory, setActiveCategory] = React.useState('hot-coffee');
 
   // Memoize filtered categories to avoid unnecessary recalculations
-  const filteredCategories = React.useMemo(() => {
-    return categories.filter(category => selectedCategory === 'all' || category.id === selectedCategory);
-  }, [categories, selectedCategory]);
+
 
   // Preload images when menu items change
   React.useEffect(() => {
@@ -48,21 +46,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
     }
   }, [menuItems, activeCategory]);
 
-  const handleCategoryClick = (categoryId: string) => {
-    setActiveCategory(categoryId);
-    const element = document.getElementById(categoryId);
-    if (element) {
-      const headerHeight = 64; // Header height
-      const mobileNavHeight = 60; // Mobile nav height
-      const offset = headerHeight + mobileNavHeight + 20; // Extra padding
-      const elementPosition = element.offsetTop - offset;
-      
-      window.scrollTo({
-        top: elementPosition,
-        behavior: 'smooth'
-      });
-    }
-  };
+
 
   React.useEffect(() => {
     if (categories.length > 0) {

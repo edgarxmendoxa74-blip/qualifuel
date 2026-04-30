@@ -147,7 +147,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
               decoding="async"
-              fetchpriority={item.popular ? "high" : "auto"}
+              fetchPriority={item.popular ? "high" : "auto"}
               onError={(e) => {
                 const logo = siteSettings?.site_logo || '/logo.jpg';
                 if (e.currentTarget.src !== logo) {
@@ -158,7 +158,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center opacity-10">
-               <img src={siteSettings?.site_logo || "/logo.jpg"} className="w-32 h-32 object-contain" />
+               <img src={siteSettings?.site_logo || "/logo.jpg"} alt="Logo" className="w-32 h-32 object-contain" />
             </div>
           )}
           
@@ -268,6 +268,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
         <div className="fixed inset-0 bg-black/95 backdrop-blur-xl flex items-center justify-center z-[100] p-4 animate-fade-in">
           <div className="bg-quali-dark rounded-[2.5rem] md:rounded-[3rem] max-w-xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-white/10 relative custom-scrollbar">
             <button
+              title="Close"
               onClick={() => setShowCustomization(false)}
               className="absolute top-6 right-6 md:top-8 md:right-8 p-3 hover:bg-white/5 rounded-2xl transition-all text-gray-500 hover:text-white z-10"
             >
@@ -367,6 +368,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
                               {selectedAddOns.find(a => a.id === addOn.id) ? (
                                 <div className="flex items-center space-x-4 bg-white/5 rounded-2xl p-2 border border-white/10">
                                   <button
+                                    title="Decrease quantity"
                                     type="button"
                                     onClick={() => {
                                       const current = selectedAddOns.find(a => a.id === addOn.id);
@@ -380,6 +382,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
                                     {selectedAddOns.find(a => a.id === addOn.id)?.quantity || 0}
                                   </span>
                                   <button
+                                    title="Increase quantity"
                                     type="button"
                                     onClick={() => {
                                       const current = selectedAddOns.find(a => a.id === addOn.id);

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
-  Plus, Edit, Trash2, Save, X, ArrowLeft, Package, ImageIcon, 
+  Plus, Edit, Trash2, Save, X, ArrowLeft, Package, 
   Settings as SettingsIcon, FolderOpen, CreditCard, Lock, Menu as MenuIcon
 } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
-import { addOnCategories } from '../data/menuData';
 import { useMenu } from '../hooks/useMenu';
 import { useCategories } from '../hooks/useCategories';
 import ImageUpload from './ImageUpload';
@@ -24,13 +23,13 @@ const AdminDashboard: React.FC = () => {
   const { menuItems, loading: menuLoading, error: menuError, addMenuItem, updateMenuItem, deleteMenuItem } = useMenu();
   const { categories, loading: categoriesLoading, error: categoryError } = useCategories();
   
-  const isInitialLoading = settingsLoading || menuLoading || categoriesLoading;
+
   const error = settingsError || menuError || categoryError;
   
 
 
   const [currentView, setCurrentView] = useState<'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings'>('items');
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [formData, setFormData] = useState<Partial<MenuItem>>({
@@ -329,10 +328,10 @@ const AdminDashboard: React.FC = () => {
                         </div>
                       )}
                       <div className="absolute top-3 right-3 flex space-x-1.5">
-                        <button onClick={() => handleEditItem(item)} className="p-2 bg-black/50 backdrop-blur-md text-white rounded-lg hover:bg-quali-primary transition-colors border border-white/10">
+                        <button title="Edit" onClick={() => handleEditItem(item)} className="p-2 bg-black/50 backdrop-blur-md text-white rounded-lg hover:bg-quali-primary transition-colors border border-white/10">
                           <Edit className="h-3.5 w-3.5" />
                         </button>
-                        <button onClick={() => handleDeleteItem(item.id)} className="p-2 bg-black/50 backdrop-blur-md text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors border border-white/10">
+                        <button title="Delete" onClick={() => handleDeleteItem(item.id)} className="p-2 bg-black/50 backdrop-blur-md text-red-500 rounded-lg hover:bg-red-500 hover:text-white transition-colors border border-white/10">
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
@@ -358,7 +357,7 @@ const AdminDashboard: React.FC = () => {
             <div className="animate-fade-in space-y-10">
               <div className="flex items-center justify-between border-b border-white/10 pb-10">
                 <div className="flex items-center space-x-6">
-                  <button onClick={() => setCurrentView('items')} className="p-4 bg-white/5 text-white rounded-2xl border border-white/10 hover:bg-white/10 transition-all"><ArrowLeft className="h-6 w-6" /></button>
+                  <button title="Back" onClick={() => setCurrentView('items')} className="p-4 bg-white/5 text-white rounded-2xl border border-white/10 hover:bg-white/10 transition-all"><ArrowLeft className="h-6 w-6" /></button>
                   <div>
                     <h2 className="text-5xl font-black text-white italic tracking-tighter mb-1">{currentView === 'add' ? 'Provision' : 'Refuel'} <span className="text-quali-primary">Asset</span></h2>
                     <p className="text-gray-400 font-bold tracking-[0.3em] text-[10px]">Configure dietary specifications</p>
@@ -418,7 +417,7 @@ const AdminDashboard: React.FC = () => {
                           <div key={v.id} className="flex items-center space-x-4 bg-white/5 p-4 rounded-2xl border border-white/10">
                             <input type="text" value={v.name} onChange={(e) => updateVariation(i, 'name', e.target.value)} className="flex-1 bg-transparent border-none text-white font-bold text-xs focus:ring-0 px-2" placeholder="Variant Name" />
                             <input type="number" value={v.price} onChange={(e) => updateVariation(i, 'price', Number(e.target.value))} className="w-24 bg-transparent border-none text-white font-black italic text-sm focus:ring-0 text-right pr-4 border-r border-white/10" placeholder="\u20b1" />
-                            <button onClick={() => removeVariation(i)} className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><X className="h-4 w-4" /></button>
+                            <button title="Remove Variation" onClick={() => removeVariation(i)} className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><X className="h-4 w-4" /></button>
                           </div>
                         ))}
                       </div>
@@ -435,7 +434,7 @@ const AdminDashboard: React.FC = () => {
                         <div key={a.id} className="flex items-center space-x-3 bg-white/5 p-3 rounded-xl border border-white/10">
                           <input type="text" value={a.name} onChange={(e) => updateAddOn(i, 'name', e.target.value)} className="flex-1 bg-transparent border-none text-white text-xs focus:ring-0" placeholder="Add-on Name" />
                           <input type="number" value={a.price} onChange={(e) => updateAddOn(i, 'price', Number(e.target.value))} className="w-20 bg-transparent border-none text-white text-xs focus:ring-0" placeholder="\u20b1" />
-                          <button onClick={() => removeAddOn(i)} className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><X className="h-4 w-4" /></button>
+                          <button title="Remove Add-on" onClick={() => removeAddOn(i)} className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"><X className="h-4 w-4" /></button>
                         </div>
                       ))}
                     </div>

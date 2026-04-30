@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Save, Upload, X, Loader, Settings as SettingsIcon, Edit as EditIcon, Layout as LayoutIcon, Image as ImageIcon } from 'lucide-react';
+import { Save, X, Loader, Settings as SettingsIcon, Edit as EditIcon, Layout as LayoutIcon, Image as ImageIcon } from 'lucide-react';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { useImageUpload } from '../hooks/useImageUpload';
 import ImageUpload from './ImageUpload';
@@ -7,7 +7,7 @@ import Toast, { ToastType } from './Toast';
 
 const SiteSettingsManager: React.FC = () => {
   const { siteSettings, loading, updateSiteSettings } = useSiteSettings();
-  const { uploadImage, uploading } = useImageUpload();
+  const { uploading } = useImageUpload();
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [formData, setFormData] = useState({
@@ -19,9 +19,7 @@ const SiteSettingsManager: React.FC = () => {
     hero_subtitle: '',
     hero_text: ''
   });
-  const [logoFile, setLogoFile] = useState<File | null>(null);
   const [logoPreview, setLogoPreview] = useState<string>('');
-  const [heroFile, setHeroFile] = useState<File | null>(null);
   const [heroPreview, setHeroPreview] = useState<string>('');
   const [toast, setToast] = useState<{ message: string; type: ToastType } | null>(null);
 
@@ -85,8 +83,7 @@ const SiteSettingsManager: React.FC = () => {
       setHeroPreview(siteSettings.hero_banner);
     }
     setIsEditing(false);
-    setLogoFile(null);
-    setHeroFile(null);
+
   };
 
   if (loading) {
@@ -198,7 +195,7 @@ const SiteSettingsManager: React.FC = () => {
                       currentImage={logoPreview} 
                       onImageChange={(imageUrl) => {
                         setLogoPreview(imageUrl || '');
-                        setLogoFile(null);
+
                       }} 
                     />
                   </div>
@@ -209,7 +206,7 @@ const SiteSettingsManager: React.FC = () => {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black text-gray-500 tracking-widest">Business Name</label>
                   {isEditing ? (
-                    <input type="text" name="site_name" value={formData.site_name} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
+                    <input title="Business Name" type="text" name="site_name" value={formData.site_name} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
                   ) : (
                     <p className="text-2xl font-black text-white italic tracking-tight">{siteSettings?.site_name}</p>
                   )}
@@ -217,7 +214,7 @@ const SiteSettingsManager: React.FC = () => {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black text-gray-500 tracking-widest">Site Tagline</label>
                   {isEditing ? (
-                    <textarea name="site_description" value={formData.site_description} onChange={handleInputChange} rows={3} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
+                    <textarea title="Site Tagline" name="site_description" value={formData.site_description} onChange={handleInputChange} rows={3} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
                   ) : (
                     <p className="text-gray-400 font-bold text-sm leading-relaxed">{siteSettings?.site_description}</p>
                   )}
@@ -226,7 +223,7 @@ const SiteSettingsManager: React.FC = () => {
                   <div className="space-y-3">
                     <label className="text-[10px] font-black text-gray-500 tracking-widest">Symbol</label>
                     {isEditing ? (
-                      <input type="text" name="currency" value={formData.currency} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold text-center" />
+                      <input title="Currency Symbol" type="text" name="currency" value={formData.currency} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold text-center" />
                     ) : (
                       <p className="text-2xl font-black text-white">{siteSettings?.currency}</p>
                     )}
@@ -234,7 +231,7 @@ const SiteSettingsManager: React.FC = () => {
                   <div className="space-y-3">
                     <label className="text-[10px] font-black text-gray-500 tracking-widest">ISO Code</label>
                     {isEditing ? (
-                      <input type="text" name="currency_code" value={formData.currency_code} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold text-center" />
+                      <input title="Currency ISO Code" type="text" name="currency_code" value={formData.currency_code} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold text-center" />
                     ) : (
                       <p className="text-2xl font-black text-white">{siteSettings?.currency_code}</p>
                     )}
@@ -267,7 +264,7 @@ const SiteSettingsManager: React.FC = () => {
                       currentImage={heroPreview} 
                       onImageChange={(imageUrl) => {
                         setHeroPreview(imageUrl || '');
-                        setHeroFile(null);
+
                       }} 
                     />
                   </div>
@@ -278,7 +275,7 @@ const SiteSettingsManager: React.FC = () => {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black text-gray-500 tracking-widest text-[#9ACA3C]">Hero Primary Title</label>
                   {isEditing ? (
-                    <input type="text" name="hero_title" value={formData.hero_title} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
+                    <input title="Hero Primary Title" type="text" name="hero_title" value={formData.hero_title} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
                   ) : (
                     <p className="text-xl font-black text-white italic">{siteSettings?.hero_title}</p>
                   )}
@@ -286,7 +283,7 @@ const SiteSettingsManager: React.FC = () => {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black text-gray-500 tracking-widest text-[#9ACA3C]">Hero Subtitle</label>
                   {isEditing ? (
-                    <input type="text" name="hero_subtitle" value={formData.hero_subtitle} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
+                    <input title="Hero Subtitle" type="text" name="hero_subtitle" value={formData.hero_subtitle} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
                   ) : (
                     <p className="text-xl font-black text-white italic">{siteSettings?.hero_subtitle}</p>
                   )}
@@ -294,7 +291,7 @@ const SiteSettingsManager: React.FC = () => {
                 <div className="space-y-3">
                   <label className="text-[10px] font-black text-gray-500 tracking-widest text-[#9ACA3C]">Banner Overlay Text</label>
                   {isEditing ? (
-                    <input type="text" name="hero_text" value={formData.hero_text} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
+                    <input title="Banner Overlay Text" type="text" name="hero_text" value={formData.hero_text} onChange={handleInputChange} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm font-bold" />
                   ) : (
                     <p className="text-xl font-black text-white italic">{siteSettings?.hero_text}</p>
                   )}

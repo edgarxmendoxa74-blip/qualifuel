@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Edit, Trash2, Save, X, ArrowLeft, CreditCard, Wallet, ShieldCheck, Zap } from 'lucide-react';
+import { Plus, Edit, Trash2, Save, ArrowLeft, CreditCard, Wallet, ShieldCheck, Zap } from 'lucide-react';
 import { usePaymentMethods, PaymentMethod } from '../hooks/usePaymentMethods';
 import ImageUpload from './ImageUpload';
 import Toast, { ToastType } from './Toast';
@@ -101,10 +101,6 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
     }
   };
 
-  const handleCancel = () => {
-    setCurrentView('list');
-    setEditingMethod(null);
-  };
 
   const generateIdFromName = (name: string) => {
     return name.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').trim();
@@ -202,8 +198,8 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
                       </div>
                       
                       <div className="flex flex-col space-y-2 ml-4">
-                        <button onClick={() => handleEditMethod(method)} className="p-3 bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all border border-white/5 shadow-lg"><Edit className="h-4 w-4" /></button>
-                        <button onClick={() => handleDeleteMethod(method.id)} className="p-3 bg-red-500/5 text-red-500/50 hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all border border-red-500/10 shadow-lg"><Trash2 className="h-4 w-4" /></button>
+                        <button title="Edit" onClick={() => handleEditMethod(method)} className="p-3 bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 rounded-2xl transition-all border border-white/5 shadow-lg"><Edit className="h-4 w-4" /></button>
+                        <button title="Delete" onClick={() => handleDeleteMethod(method.id)} className="p-3 bg-red-500/5 text-red-500/50 hover:text-red-500 hover:bg-red-500/10 rounded-2xl transition-all border border-red-500/10 shadow-lg"><Trash2 className="h-4 w-4" /></button>
                       </div>
                     </div>
                   </div>
@@ -291,7 +287,7 @@ const PaymentMethodManager: React.FC<PaymentMethodManagerProps> = ({ onBack }) =
                <div className="flex flex-col md:flex-row items-center gap-8">
                   <div className="flex-1 space-y-4 w-full">
                     <label className="text-[10px] font-black text-gray-500 tracking-widest ml-4">Dispatch Rank</label>
-                    <input type="number" value={formData.sort_order} onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })} className="w-full bg-black/40 border border-white/5 rounded-2xl px-8 py-5 text-white text-center text-2xl font-black italic" />
+                    <input title="Dispatch Rank" type="number" value={formData.sort_order} onChange={(e) => setFormData({ ...formData, sort_order: Number(e.target.value) })} className="w-full bg-black/40 border border-white/5 rounded-2xl px-8 py-5 text-white text-center text-2xl font-black italic" />
                   </div>
                   
                   <div className="flex-1 w-full">

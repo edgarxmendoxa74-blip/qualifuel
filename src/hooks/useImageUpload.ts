@@ -16,11 +16,6 @@ export const useImageUpload = () => {
         throw new Error('Please upload a valid image file (JPEG, PNG, WebP, or GIF)');
       }
 
-      // Validate file size (5MB limit)
-      const maxSize = 5 * 1024 * 1024; // 5MB
-      if (file.size > maxSize) {
-        throw new Error('Image size must be less than 5MB');
-      }
 
       // Simulate upload progress
       const progressInterval = setInterval(() => {

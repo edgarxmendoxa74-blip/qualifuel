@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, Clock, ShieldCheck, Wallet, MapPin, User, Phone, Users, MessageSquare, Receipt, Truck, CreditCard, ShoppingBag } from 'lucide-react';
+import { ArrowLeft, Clock, ShieldCheck, Wallet, MapPin, User, Phone, Users, MessageSquare, Truck, CreditCard, ShoppingBag } from 'lucide-react';
 import { CartItem, ServiceType } from '../types';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { usePaymentMethods } from '../hooks/usePaymentMethods';
@@ -18,7 +18,7 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
   const [contactNumber, setContactNumber] = useState('');
   const [serviceType, setServiceType] = useState<ServiceType>('dine-in');
   const [address, setAddress] = useState('');
-  const [landmark, setLandmark] = useState('');
+  const [landmark] = useState('');
   const [pickupTime, setPickupTime] = useState('5-10');
   const [customTime, setCustomTime] = useState('');
   const [partySize, setPartySize] = useState(1);
@@ -37,9 +37,6 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
       ? (pickupTime === 'custom' ? customTime : `${pickupTime} minutes`)
       : '';
     
-    const dineInInfo = serviceType === 'dine-in' 
-      ? `👥 Party Size: ${partySize} person${partySize !== 1 ? 's' : ''}`
-      : '';
     
     const deliveryInfo = serviceType === 'delivery'
       ? `\nDelivery Method: Standard`
@@ -107,6 +104,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
         <div className="flex flex-col lg:flex-row items-center justify-between mb-8 md:mb-16 gap-8">
            <div className="flex items-center space-x-6 w-full lg:w-auto">
               <button
+                title="Back"
                 onClick={onBack}
                 className="p-3 md:p-4 bg-white/5 hover:bg-white/10 rounded-xl md:rounded-2xl transition-all border border-white/10 group"
               >
@@ -361,6 +359,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
        <div className="flex flex-col lg:flex-row items-center justify-between mb-12 md:mb-16 gap-8">
            <div className="flex items-center space-x-6 w-full lg:w-auto">
               <button
+                title="Back"
                 onClick={() => setStep('details')}
                 className="p-3 md:p-4 bg-white/5 hover:bg-white/10 rounded-xl md:rounded-2xl transition-all border border-white/10 group"
               >

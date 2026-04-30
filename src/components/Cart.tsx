@@ -114,6 +114,7 @@ const Cart: React.FC<CartProps> = ({
                       <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
                         <div className="flex items-center space-x-3 bg-black/40 rounded-xl md:rounded-2xl p-1 border border-white/10 shadow-inner">
                           <button
+                            title="Decrease quantity"
                             onClick={() => updateQuantity(item.id, item.quantity - 1)}
                             className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg md:rounded-xl transition-all border border-white/5 text-quali-primary"
                           >
@@ -121,6 +122,7 @@ const Cart: React.FC<CartProps> = ({
                           </button>
                           <span className="font-black text-white tabular-nums tracking-tighter min-w-[30px] text-center">{item.quantity}</span>
                           <button
+                            title="Increase quantity"
                             onClick={() => updateQuantity(item.id, item.quantity + 1)}
                             className="w-9 h-9 md:w-10 md:h-10 flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-lg md:rounded-xl transition-all border border-white/5 text-quali-primary"
                           >
@@ -135,6 +137,7 @@ const Cart: React.FC<CartProps> = ({
                           </div>
                           
                           <button
+                            title="Remove item"
                             onClick={() => removeFromCart(item.id)}
                             className="p-2.5 md:p-3 bg-red-500/5 border border-red-500/10 rounded-xl md:rounded-2xl text-red-500 hover:bg-red-500 hover:text-white transition-all duration-300"
                           >

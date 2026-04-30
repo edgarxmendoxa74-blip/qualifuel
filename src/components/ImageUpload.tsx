@@ -17,46 +17,50 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
   const { deleteImage } = useImageUpload();
   const [isLoading, setIsLoading] = React.useState(false);
 
-  const MAX_FILE_SIZE_MB = 5;
-  const RECOMMENDED_WIDTH = 2000;
+  const RECOMMENDED_WIDTH = 600;
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    // Check file size (informational only, resizing will handle the rest)
-    if (file.size > MAX_FILE_SIZE_MB * 1024 * 1024) {
-      alert(`File is over ${MAX_FILE_SIZE_MB}MB. We will compress it for you, but for best quality, try a smaller file.`);
-    }
 
     setIsLoading(true);
 
     try {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const img = new Image();
-        img.onload = () => {
-          // Crop to 1:1 aspect ratio
-          const size = Math.min(img.width, img.height);
-          const sx = (img.width - size) / 2;
-          const sy = (img.height - size) / 2;
+      const objectUrl = URL.createObjectURL(file);
+      const img = new Image();
+      
+      img.onload = () => {
+        // Crop to 1:1 aspect ratio
+        const size = Math.min(img.width, img.height);
+        const sx = (img.width - size) / 2;
+        const sy = (img.height - size) / 2;
 
-          const targetSize = RECOMMENDED_WIDTH;
+        const targetSize = RECOMMENDED_WIDTH;
 
-          canvas.width = targetSize;
-          canvas.height = targetSize;
-          const ctx = canvas.getContext('2d');
-          if (ctx) {
-            ctx.drawImage(img, sx, sy, size, size, 0, 0, targetSize, targetSize);
-            // Use JPEG for better compression/smoothness
-            const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-            onImageChange(compressedDataUrl);
-          }
-          setIsLoading(false);
-        };
-        img.src = e.target?.result as string;
+        const canvas = document.createElement('canvas');
+        canvas.width = targetSize;
+        canvas.height = targetSize;
+        const ctx = canvas.getContext('2d');
+        if (ctx) {
+          ctx.imageSmoothingEnabled = true;
+          ctx.imageSmoothingQuality = 'high';
+          ctx.drawImage(img, sx, sy, size, size, 0, 0, targetSize, targetSize);
+          // Use WebP for better compression/smoothness and smaller file size
+          const compressedDataUrl = canvas.toDataURL('image/webp', 0.8);
+          onImageChange(compressedDataUrl);
+        }
+        setIsLoading(false);
+        URL.revokeObjectURL(objectUrl);
       };
-      reader.readAsDataURL(file);
+      
+      img.onerror = () => {
+        alert('Failed to process image');
+        setIsLoading(false);
+        URL.revokeObjectURL(objectUrl);
+      };
+      
+      img.src = objectUrl;
     } catch (error) {
       console.error('Image processing failed:', error);
       alert('Failed to process image');
@@ -101,13 +105,10 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
             onError={(e) => {
               e.currentTarget.style.display = 'none';
             }}
-            onLoad={(e) => {
-              e.currentTarget.style.opacity = '1';
-            }}
-            style={{ opacity: 0 }}
           />
           <button
             type="button"
+            title="Remove image"
             onClick={handleRemoveImage}
             className="absolute top-4 right-4 p-2 bg-red-500/80 backdrop-blur-md text-white rounded-xl hover:bg-red-500 transition-colors duration-200 shadow-lg"
             disabled={isLoading}
@@ -131,7 +132,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
                 <ImageIcon className="h-10 w-10 text-gray-500" />
               </div>
               <p className="text-[10px] font-black text-white uppercase tracking-widest mb-1">📁 Upload Image</p>
-              <p className="text-[8px] font-black text-gray-600 uppercase tracking-widest">Standard size: 2000x2000px (1:1 Ratio)</p>
+              <p className="text-[8px] font-black text-gray-600 uppercase tracking-widest">Standard size: 600x600px (1:1 Ratio)</p>
             </>
           )}
         </div>
@@ -139,6 +140,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({
 
       <input
         ref={fileInputRef}
+        title="Upload Image"
         type="file"
         accept="image/*"
         onChange={handleFileSelect}

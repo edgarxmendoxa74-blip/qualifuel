@@ -232,7 +232,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
                   onClick={handleAddToCart}
                   className="bg-quali-gradient text-white px-5 py-3 rounded-xl hover:shadow-[0_0_30px_rgba(154,202,60,0.3)] transition-all duration-300 transform hover:scale-105 font-black text-[9px] uppercase tracking-widest border border-white/10 shadow-lg"
                 >
-                  {item.variations?.length || item.addOns?.length ? '✨ Custom' : '🛒 Add'}
+                  🛒 Add
                 </button>
               ) : (
                 <div className="flex items-center space-x-2 bg-white/5 rounded-xl p-1 border border-white/10 shadow-xl backdrop-blur-xl">

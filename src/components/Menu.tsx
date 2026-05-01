@@ -101,7 +101,7 @@ const Menu: React.FC<MenuProps> = ({ menuItems, addToCart, cartItems, updateQuan
               <section key={category.id} id={category.id} className="mb-24 animate-fade-in">
                 <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 border-b-2 border-white/5 pb-8 gap-6">
                   <div className="w-full text-center md:text-left">
-                    <h3 className="text-3xl md:text-5xl font-black text-white italic tracking-tighter leading-none">
+                    <h3 className="text-3xl md:text-5xl font-black text-white italic tracking-tighter leading-none uppercase">
                       {category.name}
                     </h3>
                   </div>

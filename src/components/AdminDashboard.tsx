@@ -386,7 +386,7 @@ const AdminDashboard: React.FC = () => {
                     <select value={formData.category || ''} onChange={(e) => setFormData({ ...formData, category: e.target.value })} className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-5 text-white focus:ring-2 focus:ring-quali-primary/50" title="Select Category">
                       {categories.length === 0 && <option value="" disabled className="bg-quali-dark">No categories available</option>}
                       {!formData.category && categories.length > 0 && <option value="" disabled className="bg-quali-dark">-- Select a Category --</option>}
-                      {categories.map(cat => <option key={cat.id} value={cat.id} className="bg-quali-dark">{cat.name}</option>)}
+                      {categories.map(cat => <option key={cat.id} value={cat.id} className="bg-quali-dark uppercase">{cat.name}</option>)}
                     </select>
                   </div>
                   <div className="flex items-center space-x-8 pt-8">

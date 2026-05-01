@@ -30,7 +30,7 @@ const SubNav: React.FC<SubNavProps> = ({ selectedCategory, onCategoryClick }) =>
                     : 'bg-white/5 text-white border-white/5 hover:border-quali-primary/50 hover:text-quali-primary'
                 }`}
               >
-                <span className="font-noto-kr">{c.name}</span>
+                <span className="font-noto-kr uppercase">{c.name}</span>
               </button>
             ))
           )}

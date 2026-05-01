@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
                 </div>
               )}
               <div className="flex flex-col text-left">
-                <h1 className="text-lg md:text-2xl font-pretendard font-black tracking-tighter leading-none uppercase">
+                <h1 className="text-lg md:text-2xl font-pretendard font-black tracking-tighter leading-none">
                   {loading ? (
                     <div className="w-20 h-5 bg-white/10 rounded animate-pulse" />
                   ) : (
@@ -51,9 +51,7 @@ const Header: React.FC<HeaderProps> = ({ cartItemsCount, onCartClick, onMenuClic
                     )
                   )}
                 </h1>
-                <p className="text-[7px] md:text-[9px] font-bold text-quali-secondary tracking-[0.15em] mt-0.5 hidden xs:block">
-                  {siteSettings?.site_description || "High Protein Meals"}
-                </p>
+
               </div>
             </button>
 

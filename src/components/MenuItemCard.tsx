@@ -147,7 +147,7 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
               loading="lazy"
               decoding="async"
-              fetchPriority={item.popular ? "high" : "auto"}
+              fetchpriority={item.popular ? "high" : "auto"}
               onError={(e) => {
                 const logo = siteSettings?.site_logo || '/logo.jpg';
                 if (e.currentTarget.src !== logo) {
@@ -198,14 +198,9 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
             </h4>
           </div>
           
-          <div className="mb-6 flex items-center space-x-2">
-            <div className="h-1 w-8 bg-quali-primary rounded-full" />
-            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest">{item.category}</span>
-          </div>
+
           
-          <p className={`text-[10px] mb-4 leading-relaxed font-bold tracking-wide min-h-[30px] ${!item.available ? 'text-gray-600' : 'text-gray-400'}`}>
-            {!item.available ? 'Currently unavailable' : item.description}
-          </p>
+
           
           {/* Pricing Section */}
           <div className="flex items-center justify-between">

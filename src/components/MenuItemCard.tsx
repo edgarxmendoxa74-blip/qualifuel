@@ -198,9 +198,11 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
             </h4>
           </div>
           
-
-          
-
+          {item.description && (
+            <p className="text-sm text-gray-400 mb-4 line-clamp-2 leading-relaxed">
+              {item.description}
+            </p>
+          )}
           
           {/* Pricing Section */}
           <div className="flex items-center justify-between">
@@ -273,9 +275,14 @@ const MenuItemCard: React.FC<MenuItemCardProps> = React.memo(({
             <div className="p-8 md:p-12">
               <div className="mb-10 md:mb-12">
                 <p className="text-[10px] font-black text-quali-primary tracking-[0.4em] mb-2 text-center italic">Elite Fuel Selection</p>
-                <h3 className="text-3xl md:text-4xl font-black text-white italic text-center leading-tight uppercase tracking-tighter">
+                <h3 className="text-3xl md:text-4xl font-black text-white italic text-center leading-tight uppercase tracking-tighter mb-4">
                   {item.name}
                 </h3>
+                {item.description && (
+                  <p className="text-sm text-gray-400 text-center leading-relaxed max-w-2xl mx-auto">
+                    {item.description}
+                  </p>
+                )}
               </div>
 
               {/* Flavor Variations */}

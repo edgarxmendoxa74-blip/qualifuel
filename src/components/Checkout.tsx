@@ -16,12 +16,9 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
   const [step, setStep] = useState<'details' | 'payment'>('details');
   const [customerName, setCustomerName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
-  const [serviceType, setServiceType] = useState<ServiceType>('dine-in');
-  const [address, setAddress] = useState('');
-  const [landmark] = useState('');
+  const [serviceType, setServiceType] = useState<ServiceType>('pickup');
   const [pickupTime, setPickupTime] = useState('5-10');
   const [customTime, setCustomTime] = useState('');
-  const [partySize, setPartySize] = useState(1);
   const [notes, setNotes] = useState('');
 
   React.useEffect(() => {
@@ -33,24 +30,15 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
   };
 
   const handlePlaceOrder = () => {
-    const timeInfo = serviceType === 'pickup' 
-      ? (pickupTime === 'custom' ? customTime : `${pickupTime} minutes`)
-      : '';
-    
-    
-    const deliveryInfo = serviceType === 'delivery'
-      ? `\nDelivery Method: Standard`
-      : '';
+    const timeInfo = pickupTime === 'custom' ? customTime : `${pickupTime} minutes`;
     
     const orderDetails = `
 ${(siteSettings?.site_name || 'QualiFuel').toUpperCase()} ORDER
 
 Customer: ${customerName}
 Contact: ${contactNumber}
-Service: ${serviceType.charAt(0).toUpperCase() + serviceType.slice(1)}
-${serviceType === 'delivery' ? `Address: ${address}${landmark ? `\nLandmark: ${landmark}` : ''}${deliveryInfo}` : ''}
-${serviceType === 'pickup' ? `Pickup Time: ${timeInfo}` : ''}
-${serviceType === 'dine-in' ? `Party Size: ${partySize} person${partySize !== 1 ? 's' : ''}` : ''}
+Service: Pickup
+Pickup Time: ${timeInfo}
 
 ORDER DETAILS:
 ${cartItems.map(item => {
@@ -92,9 +80,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
   };
 
   const isDetailsValid = customerName && contactNumber && 
-    (serviceType !== 'delivery' || address) && 
-    (serviceType !== 'pickup' || (pickupTime !== 'custom' || customTime)) &&
-    (serviceType !== 'dine-in' || partySize > 0);
+    (pickupTime !== 'custom' || customTime);
 
   const activePayments = paymentMethods.filter(p => p.active);
 
@@ -115,7 +101,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                   <span className="text-white">Order </span>
                   <span className="text-quali-primary">Checkout</span>
                 </h1>
-                <p className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-[0.4em]">Step 1: Contact & Delivery</p>
+                <p className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-[0.4em]">Step 1: Contact & Pickup</p>
               </div>
            </div>
            
@@ -175,110 +161,43 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
             <div className="bg-white/5 backdrop-blur-xl rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 border border-white/10 shadow-2xl">
                <h2 className="text-xl md:text-2xl font-black text-white italic tracking-tight uppercase mb-8 md:mb-10 flex items-center">
                   <div className="w-1 h-5 md:h-6 bg-quali-primary mr-3 md:mr-4 rounded-full" />
-                  Service Type
+                  Pickup Estimate
                </h2>
 
-               <div className="grid grid-cols-3 gap-3 md:gap-6 mb-8 md:mb-10">
-                  {[
-                    { value: 'dine-in', label: 'Dine In', icon: <Users className="h-6 w-6 md:h-8 md:w-8" /> },
-                    { value: 'pickup', label: 'Pickup', icon: <ShoppingBag className="h-6 w-6 md:h-8 md:w-8" /> },
-                    { value: 'delivery', label: 'Delivery', icon: <Truck className="h-6 w-6 md:h-8 md:w-8" /> }
-                  ].map((option) => (
-                    <button
-                      key={option.value}
-                      onClick={() => setServiceType(option.value as ServiceType)}
-                      className={`flex flex-col items-center justify-center p-4 md:p-8 rounded-xl md:rounded-[2rem] border-2 transition-all duration-300 relative group ${
-                        serviceType === option.value
-                          ? 'border-quali-primary bg-quali-primary/10'
-                          : 'border-white/5 bg-white/[0.02] hover:border-white/20'
-                      }`}
-                    >
-                      <div className={`mb-2 md:mb-3 transform group-hover:scale-110 transition-transform ${serviceType === option.value ? 'text-white' : 'text-gray-600'}`}>{option.icon}</div>
-                      <div className={`text-[8px] md:text-[10px] font-black tracking-widest text-center ${serviceType === option.value ? 'text-white' : 'text-gray-500'}`}>
-                        {option.label}
-                      </div>
-                    </button>
-                  ))}
-               </div>
-
                <div className="animate-scale-in">
-                  {serviceType === 'dine-in' && (
-                    <div className="space-y-4 md:space-y-6">
-                      <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
-                        <Users className="h-3 w-3 mr-2" /> Party Size
-                      </label>
-                      <div className="flex items-center space-x-4 md:space-x-6 bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-[2rem] border border-white/10 w-fit mx-auto lg:mx-0">
-                        <button
-                          onClick={() => setPartySize(Math.max(1, partySize - 1))}
-                          className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 flex items-center justify-center text-xl text-white hover:bg-white/10 border border-white/5"
-                        >
-                          -
-                        </button>
-                        <div className="flex flex-col items-center min-w-[3rem] md:min-w-[4rem]">
-                           <span className="text-2xl md:text-3xl font-black text-white italic">{partySize}</span>
-                        </div>
-                        <button
-                          onClick={() => setPartySize(Math.min(20, partySize + 1))}
-                          className="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-white/5 flex items-center justify-center text-xl text-white hover:bg-white/10 border border-white/5"
-                        >
-                          +
-                        </button>
-                      </div>
+                  <div className="space-y-4 md:space-y-6">
+                    <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
+                      <Clock className="h-3 w-3 mr-2" /> Pickup Estimate
+                    </label>
+                    <div className="grid grid-cols-4 gap-2 md:gap-4">
+                      {['10 MIN', '20 MIN', '30 MIN', 'SPEC'].map((label, idx) => {
+                        const values = ['5-10', '15-20', '25-30', 'custom'];
+                        return (
+                          <button
+                            key={label}
+                            onClick={() => setPickupTime(values[idx])}
+                            className={`py-3 md:py-4 rounded-xl md:rounded-2xl border-2 transition-all font-black text-[8px] md:text-[10px] tracking-widest ${
+                              pickupTime === values[idx]
+                                ? 'border-quali-primary bg-quali-primary/10 text-white'
+                                : 'border-white/5 bg-white/[0.02] text-gray-500'
+                            }`}
+                          >
+                            {label}
+                          </button>
+                        );
+                      })}
                     </div>
-                  )}
-
-                  {serviceType === 'pickup' && (
-                    <div className="space-y-4 md:space-y-6">
-                      <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
-                        <Clock className="h-3 w-3 mr-2" /> Pickup Estimate
-                      </label>
-                      <div className="grid grid-cols-4 gap-2 md:gap-4">
-                        {['10M', '20M', '30M', 'SPEC'].map((label, idx) => {
-                          const values = ['5-10', '15-20', '25-30', 'custom'];
-                          return (
-                            <button
-                              key={label}
-                              onClick={() => setPickupTime(values[idx])}
-                              className={`py-3 md:py-4 rounded-xl md:rounded-2xl border-2 transition-all font-black text-[8px] md:text-[10px] tracking-widest ${
-                                pickupTime === values[idx]
-                                  ? 'border-quali-primary bg-quali-primary/10 text-white'
-                                  : 'border-white/5 bg-white/[0.02] text-gray-500'
-                              }`}
-                            >
-                              {label}
-                            </button>
-                          );
-                        })}
-                      </div>
-                      
-                      {pickupTime === 'custom' && (
-                        <input
-                          type="text"
-                          value={customTime}
-                          onChange={(e) => setCustomTime(e.target.value)}
-                          className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-6 md:px-8 py-3 md:py-5 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm md:text-base font-bold italic"
-                          placeholder="Specify custom time..."
-                        />
-                      )}
-                    </div>
-                  )}
-
-                  {serviceType === 'delivery' && (
-                    <div className="space-y-4 md:space-y-8">
-                       <div className="space-y-3">
-                        <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
-                          <MapPin className="h-3 w-3 mr-2" /> Delivery Address
-                        </label>
-                        <textarea
-                          value={address}
-                          onChange={(e) => setAddress(e.target.value)}
-                          className="w-full bg-white/5 border border-white/10 rounded-2xl md:rounded-[2rem] px-6 md:px-8 py-4 md:py-6 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm md:text-base font-bold italic"
-                          placeholder="Unit, Street, Barangay, City..."
-                          rows={3}
-                        />
-                      </div>
-                    </div>
-                  )}
+                    
+                    {pickupTime === 'custom' && (
+                      <input
+                        type="text"
+                        value={customTime}
+                        onChange={(e) => setCustomTime(e.target.value)}
+                        className="w-full bg-white/5 border border-white/10 rounded-xl md:rounded-2xl px-6 md:px-8 py-3 md:py-5 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm md:text-base font-bold italic"
+                        placeholder="Specify custom time..."
+                      />
+                    )}
+                  </div>
 
                   <div className="mt-8 md:mt-10 space-y-3">
                     <label className="text-[9px] md:text-[10px] font-black text-gray-500 tracking-widest ml-4 flex items-center">
@@ -288,7 +207,7 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       className="w-full bg-white/5 border border-white/10 rounded-2xl md:rounded-[2rem] px-6 md:px-8 py-4 md:py-6 text-white focus:ring-2 focus:ring-quali-primary/50 text-sm md:text-base font-bold italic"
-                      placeholder="Special requests or allergies..."
+                      placeholder="Special requests..."
                       rows={2}
                     />
                   </div>

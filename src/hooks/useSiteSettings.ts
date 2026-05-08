@@ -12,25 +12,28 @@ export const useSiteSettings = () => {
       setLoading(true);
       setError(null);
 
-      const { data, error } = await supabase
+      const { data, error: fetchError } = await supabase
         .from('site_settings')
-        .select('*')
-        .eq('id', 'global')
-        .single();
+        .select('id, value');
 
-      if (error && error.code !== 'PGRST116') throw error; // PGRST116 is "not found"
+      if (fetchError) throw fetchError;
 
       if (data) {
+        const settingsMap: Record<string, string> = {};
+        data.forEach((row: { id: string; value: string }) => {
+          settingsMap[row.id] = row.value;
+        });
+
         setSiteSettings({
-          site_name: data.site_name || 'QualiFuel',
-          site_logo: data.site_logo || '',
-          site_description: data.site_description || '',
-          currency: data.currency || '₱',
-          currency_code: data.currency_code || 'PHP',
-          hero_title: data.hero_title || 'QualiFuel',
-          hero_subtitle: data.hero_subtitle || 'High Protein Meals',
-          hero_text: data.hero_text || 'Fuel Your Potential.',
-          hero_banner: data.hero_banner || '/images/qualifuel-banner.png'
+          site_name: settingsMap.site_name || 'QualiFuel',
+          site_logo: settingsMap.site_logo || '',
+          site_description: settingsMap.site_description || '',
+          currency: settingsMap.currency || '₱',
+          currency_code: settingsMap.currency_code || 'PHP',
+          hero_title: settingsMap.hero_title || 'QualiFuel',
+          hero_subtitle: settingsMap.hero_subtitle || 'High Protein Meals',
+          hero_text: settingsMap.hero_text || 'Fuel Your Potential.',
+          hero_banner: settingsMap.hero_banner || '/images/qualifuel-banner.png'
         });
       }
     } catch (err: any) {
@@ -51,14 +54,18 @@ export const useSiteSettings = () => {
     try {
       setError(null);
       
-      const { error } = await supabase
-        .from('site_settings')
-        .upsert({ 
-          id: 'global',
-          ...updates 
-        }, { onConflict: 'id' });
+      const upserts = Object.entries(updates).map(([key, value]) => ({
+        id: key,
+        value: value,
+        updated_at: new Date().toISOString()
+      }));
 
-      if (error) throw error;
+      const { error: updateError } = await supabase
+        .from('site_settings')
+        .upsert(upserts, { onConflict: 'id' });
+
+      if (updateError) throw updateError;
+      
       await fetchSiteSettings();
     } catch (err) {
       console.error('Error updating site settings:', err);

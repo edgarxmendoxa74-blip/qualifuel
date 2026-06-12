@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { 
   Plus, Edit, Trash2, Save, X, ArrowLeft, Package, 
-  Settings as SettingsIcon, FolderOpen, CreditCard, Lock, Menu as MenuIcon
+  Settings as SettingsIcon, FolderOpen, CreditCard, Lock, Menu as MenuIcon, Ticket
 } from 'lucide-react';
 import { MenuItem, Variation, AddOn } from '../types';
 import { useMenu } from '../hooks/useMenu';
@@ -10,6 +10,7 @@ import ImageUpload from './ImageUpload';
 import CategoryManager from './CategoryManager';
 import PaymentMethodManager from './PaymentMethodManager';
 import SiteSettingsManager from './SiteSettingsManager';
+import VoucherManager from './VoucherManager';
 import Toast, { ToastType } from './Toast';
 
 import { useSiteSettings } from '../hooks/useSiteSettings';
@@ -28,7 +29,7 @@ const AdminDashboard: React.FC = () => {
   
 
 
-  const [currentView, setCurrentView] = useState<'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings'>('items');
+  const [currentView, setCurrentView] = useState<'items' | 'add' | 'edit' | 'categories' | 'payments' | 'settings' | 'vouchers'>('items');
 
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -193,6 +194,7 @@ const AdminDashboard: React.FC = () => {
   const navItems = [
     { id: 'items', label: 'Fuel Inventory', icon: Package },
     { id: 'categories', label: 'Manage Types', icon: FolderOpen },
+    { id: 'vouchers', label: 'Voucher Management', icon: Ticket },
     { id: 'payments', label: 'Payment Hub', icon: CreditCard },
     { id: 'settings', label: 'System Settings', icon: SettingsIcon },
   ];
@@ -451,6 +453,7 @@ const AdminDashboard: React.FC = () => {
           )}
 
           {currentView === 'categories' && <div className="animate-fade-in"><CategoryManager onBack={() => setCurrentView('items')} /></div>}
+          {currentView === 'vouchers' && <div className="animate-fade-in"><VoucherManager /></div>}
           {currentView === 'payments' && <div className="animate-fade-in"><PaymentMethodManager onBack={() => setCurrentView('items')} /></div>}
           {currentView === 'settings' && <div className="animate-fade-in"><SiteSettingsManager /></div>}
         </div>

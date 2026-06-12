@@ -64,8 +64,10 @@ function MainApp() {
           removeFromCart={cart.removeFromCart}
           clearCart={cart.clearCart}
           getTotalPrice={cart.getTotalPrice}
+          getSubtotal={cart.getSubtotal}
           onContinueShopping={() => handleViewChange('menu')}
           onCheckout={() => handleViewChange('checkout')}
+          appliedVoucher={cart.appliedVoucher}
         />
       )}
       
@@ -73,7 +75,11 @@ function MainApp() {
         <Checkout 
           cartItems={cart.cartItems}
           totalPrice={cart.getTotalPrice()}
+          subtotalPrice={cart.getSubtotal()}
           onBack={() => handleViewChange('cart')}
+          appliedVoucher={cart.appliedVoucher}
+          onVoucherApplied={cart.applyVoucher}
+          onVoucherRemoved={cart.removeVoucher}
         />
       )}
       

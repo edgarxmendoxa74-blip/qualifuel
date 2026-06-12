@@ -55,6 +55,36 @@ export interface OrderData {
   referenceNumber?: string;
   total: number;
   notes?: string;
+  // Voucher fields
+  voucherCode?: string;
+  voucherDiscount?: number;
+  originalTotal?: number;
+}
+
+// Voucher System Types
+export interface Voucher {
+  id: string;
+  code: string;
+  discount_percent: number;
+  status: boolean;
+  expiration_date?: string;
+  usage_limit?: number;
+  used_count: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface VoucherValidation {
+  is_valid: boolean;
+  discount_percent: number;
+  error_message: string;
+  voucher_id: string;
+}
+
+export interface VoucherUsage {
+  success: boolean;
+  message: string;
+  discount_amount: number;
 }
 
 export type PaymentMethod = 'gcash' | 'maya' | 'bank-transfer';

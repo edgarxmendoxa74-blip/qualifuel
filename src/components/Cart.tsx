@@ -8,8 +8,14 @@ interface CartProps {
   removeFromCart: (id: string) => void;
   clearCart: () => void;
   getTotalPrice: () => number;
+  getSubtotal: () => number;
   onContinueShopping: () => void;
   onCheckout: () => void;
+  appliedVoucher?: {
+    code: string;
+    discount_percent: number;
+    discount_amount: number;
+  } | null;
 }
 
 const Cart: React.FC<CartProps> = ({
@@ -18,8 +24,10 @@ const Cart: React.FC<CartProps> = ({
   removeFromCart,
   clearCart,
   getTotalPrice,
+  getSubtotal,
   onContinueShopping,
-  onCheckout
+  onCheckout,
+  appliedVoucher
 }) => {
   if (cartItems.length === 0) {
     return (
@@ -168,8 +176,19 @@ const Cart: React.FC<CartProps> = ({
              <div className="space-y-4 md:space-y-6 mb-8 md:mb-10">
                 <div className="flex items-center justify-between text-xs md:text-sm">
                    <span className="font-black text-gray-500 tracking-widest italic">Subtotal</span>
-                   <span className="font-black text-white">₱{getTotalPrice().toFixed(2)}</span>
+                   <span className="font-black text-white">₱{getSubtotal().toFixed(2)}</span>
                 </div>
+                {appliedVoucher && (
+                  <div className="flex items-center justify-between text-xs md:text-sm bg-quali-primary/10 -mx-4 px-4 py-2 rounded-lg border border-quali-primary/20">
+                    <span className="font-black text-quali-primary tracking-widest italic flex items-center space-x-2">
+                      <span>Discount ({appliedVoucher.code})</span>
+                      <span className="bg-quali-primary/20 text-quali-primary px-1.5 py-0.5 rounded text-[8px] font-bold">
+                        {appliedVoucher.discount_percent}%
+                      </span>
+                    </span>
+                    <span className="font-black text-quali-primary">-₱{appliedVoucher.discount_amount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between text-xs md:text-sm">
                    <span className="font-black text-gray-500 tracking-widest italic">Service Fee</span>
                    <span className="font-black text-quali-primary">TBD at Checkout</span>

@@ -3,16 +3,35 @@ import { ArrowLeft, Clock, ShieldCheck, Wallet, MapPin, User, Phone, Users, Mess
 import { CartItem, ServiceType } from '../types';
 import { useSiteSettings } from '../hooks/useSiteSettings';
 import { usePaymentMethods } from '../hooks/usePaymentMethods';
+import { useVouchers } from '../hooks/useVouchers';
+import VoucherInput from './VoucherInput';
 
 interface CheckoutProps {
   cartItems: CartItem[];
   totalPrice: number;
+  subtotalPrice: number;
   onBack: () => void;
+  appliedVoucher?: {
+    code: string;
+    discount_percent: number;
+    discount_amount: number;
+  } | null;
+  onVoucherApplied: (code: string, discount_percent: number) => void;
+  onVoucherRemoved: () => void;
 }
 
-const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) => {
+const Checkout: React.FC<CheckoutProps> = ({ 
+  cartItems, 
+  totalPrice, 
+  subtotalPrice,
+  onBack, 
+  appliedVoucher,
+  onVoucherApplied,
+  onVoucherRemoved 
+}) => {
   const { siteSettings } = useSiteSettings();
   const { paymentMethods } = usePaymentMethods();
+  const { useVoucherCode } = useVouchers();
   const [step, setStep] = useState<'details' | 'payment'>('details');
   const [customerName, setCustomerName] = useState('');
   const [contactNumber, setContactNumber] = useState('');
@@ -29,8 +48,23 @@ const Checkout: React.FC<CheckoutProps> = ({ cartItems, totalPrice, onBack }) =>
     setStep('payment');
   };
 
-  const handlePlaceOrder = () => {
+  const handlePlaceOrder = async () => {
     const timeInfo = pickupTime === 'custom' ? customTime : `${pickupTime} minutes`;
+    
+    // If a voucher is applied, record its usage
+    if (appliedVoucher) {
+      try {
+        await useVoucherCode(
+          appliedVoucher.code,
+          customerName,
+          contactNumber,
+          subtotalPrice
+        );
+      } catch (error) {
+        console.error('Failed to record voucher usage:', error);
+        // Continue with order even if voucher logging fails
+      }
+    }
     
     const orderDetails = `
 ${(siteSettings?.site_name || 'QualiFuel').toUpperCase()} ORDER
@@ -59,7 +93,10 @@ ${cartItems.map(item => {
   return itemDetails;
 }).join('\n')}
 
-TOTAL: ₱${totalPrice}
+${appliedVoucher ? `
+SUBTOTAL: ₱${subtotalPrice.toFixed(2)}
+DISCOUNT (${appliedVoucher.code} - ${appliedVoucher.discount_percent}%): -₱${appliedVoucher.discount_amount.toFixed(2)}
+` : ''}TOTAL: ₱${totalPrice.toFixed(2)}
 
 Payment Method: ${paymentMethods.filter(p => p.active)[0]?.name || 'GCash'}
 
@@ -213,6 +250,21 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                   </div>
                </div>
             </div>
+
+            {/* Voucher Input Section */}
+            <div className="bg-white/5 backdrop-blur-xl rounded-[2.5rem] md:rounded-[3rem] p-6 md:p-10 border border-white/10 shadow-2xl">
+               <h2 className="text-xl md:text-2xl font-black text-white italic tracking-tight uppercase mb-8 md:mb-10 flex items-center">
+                  <div className="w-1 h-5 md:h-6 bg-quali-primary mr-3 md:mr-4 rounded-full" />
+                  Promo Code
+               </h2>
+
+               <VoucherInput
+                 onVoucherApplied={onVoucherApplied}
+                 onVoucherRemoved={onVoucherRemoved}
+                 appliedVoucher={appliedVoucher}
+                 orderTotal={subtotalPrice}
+               />
+            </div>
           </div>
 
           {/* Right Summary */}
@@ -238,8 +290,27 @@ Thank you for choosing ${siteSettings?.site_name || 'QualiFuel'}!
                </div>
 
                <div className="border-t border-white/10 pt-8 md:pt-10">
-                  <div className="flex items-center justify-between mb-6 md:mb-8">
-                     <span className="text-base md:text-lg font-black text-white italic uppercase tracking-tighter">Subtotal</span>
+                  <div className="space-y-3 mb-6 md:mb-8">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-black text-gray-400 italic uppercase tracking-wider">Subtotal</span>
+                      <span className="text-lg font-black text-white italic">₱{subtotalPrice.toFixed(2)}</span>
+                    </div>
+                    
+                    {appliedVoucher && (
+                      <div className="flex items-center justify-between bg-quali-primary/10 -mx-2 px-2 py-1 rounded-lg border border-quali-primary/20">
+                        <span className="text-sm font-black text-quali-primary italic uppercase tracking-wider flex items-center space-x-2">
+                          <span>Discount ({appliedVoucher.code})</span>
+                          <span className="bg-quali-primary/20 text-quali-primary px-1.5 py-0.5 rounded text-[8px] font-bold">
+                            {appliedVoucher.discount_percent}%
+                          </span>
+                        </span>
+                        <span className="text-lg font-black text-quali-primary italic">-₱{appliedVoucher.discount_amount.toFixed(2)}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center justify-between mb-6 md:mb-8 pt-4 border-t border-white/10">
+                     <span className="text-base md:text-lg font-black text-white italic uppercase tracking-tighter">Total</span>
                      <span className="text-2xl md:text-3xl font-black text-quali-primary italic">₱{totalPrice.toFixed(2)}</span>
                   </div>
 

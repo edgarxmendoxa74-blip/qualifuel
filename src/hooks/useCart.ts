@@ -4,6 +4,12 @@ import { CartItem, MenuItem, Variation, AddOn } from '../types';
 export const useCart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
+  // Voucher state
+  const [appliedVoucher, setAppliedVoucher] = useState<{
+    code: string;
+    discount_percent: number;
+    discount_amount: number;
+  } | null>(null);
 
   const calculateItemPrice = (item: MenuItem, variation?: Variation, addOns?: AddOn[]) => {
     let price = item.basePrice;
@@ -17,6 +23,37 @@ export const useCart = () => {
     }
     return price;
   };
+
+  const getSubtotal = useCallback(() => {
+    return cartItems.reduce((total, item) => total + (item.totalPrice * item.quantity), 0);
+  }, [cartItems]);
+
+  const getTotalPrice = useCallback(() => {
+    const subtotal = getSubtotal();
+    if (appliedVoucher) {
+      return subtotal - appliedVoucher.discount_amount;
+    }
+    return subtotal;
+  }, [getSubtotal, appliedVoucher]);
+
+  const applyVoucher = useCallback((code: string, discount_percent: number) => {
+    const subtotal = getSubtotal();
+    const discount_amount = subtotal * (discount_percent / 100);
+    setAppliedVoucher({
+      code: code.toUpperCase(),
+      discount_percent,
+      discount_amount
+    });
+  }, [getSubtotal]);
+
+  const removeVoucher = useCallback(() => {
+    setAppliedVoucher(null);
+  }, []);
+
+  const clearCart = useCallback(() => {
+    setCartItems([]);
+    setAppliedVoucher(null);
+  }, []);
 
   const addToCart = useCallback((item: MenuItem, quantity: number = 1, variation?: Variation, addOns?: AddOn[], variations?: Variation[]) => {
     const totalPrice = calculateItemPrice(item, variation, addOns);
@@ -85,14 +122,6 @@ export const useCart = () => {
     setCartItems(prev => prev.filter(item => item.id !== id));
   }, []);
 
-  const clearCart = useCallback(() => {
-    setCartItems([]);
-  }, []);
-
-  const getTotalPrice = useCallback(() => {
-    return cartItems.reduce((total, item) => total + (item.totalPrice * item.quantity), 0);
-  }, [cartItems]);
-
   const getTotalItems = useCallback(() => {
     return cartItems.reduce((total, item) => total + item.quantity, 0);
   }, [cartItems]);
@@ -108,8 +137,13 @@ export const useCart = () => {
     removeFromCart,
     clearCart,
     getTotalPrice,
+    getSubtotal,
     getTotalItems,
     openCart,
-    closeCart
+    closeCart,
+    // Voucher functionality
+    appliedVoucher,
+    applyVoucher,
+    removeVoucher
   };
 };

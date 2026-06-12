@@ -41,6 +41,70 @@ export type Database = {
           updated_at?: string;
         };
       };
+      vouchers: {
+        Row: {
+          id: string;
+          code: string;
+          discount_percent: number;
+          status: boolean;
+          expiration_date: string | null;
+          usage_limit: number | null;
+          used_count: number;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          code: string;
+          discount_percent: number;
+          status?: boolean;
+          expiration_date?: string | null;
+          usage_limit?: number | null;
+          used_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          code?: string;
+          discount_percent?: number;
+          status?: boolean;
+          expiration_date?: string | null;
+          usage_limit?: number | null;
+          used_count?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      voucher_usage: {
+        Row: {
+          id: string;
+          voucher_id: string;
+          customer_name: string | null;
+          customer_contact: string | null;
+          order_total: number | null;
+          discount_amount: number | null;
+          used_at: string;
+        };
+        Insert: {
+          id?: string;
+          voucher_id: string;
+          customer_name?: string | null;
+          customer_contact?: string | null;
+          order_total?: number | null;
+          discount_amount?: number | null;
+          used_at?: string;
+        };
+        Update: {
+          id?: string;
+          voucher_id?: string;
+          customer_name?: string | null;
+          customer_contact?: string | null;
+          order_total?: number | null;
+          discount_amount?: number | null;
+          used_at?: string;
+        };
+      };
       menu_items: {
         Row: {
           id: string;

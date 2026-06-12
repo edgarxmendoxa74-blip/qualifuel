@@ -8,7 +8,7 @@
 CREATE TABLE IF NOT EXISTS vouchers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   code text UNIQUE NOT NULL,
-  discount_percent integer NOT NULL CHECK (discount_percent >= 5 AND discount_percent <= 100),
+  discount_percent integer NOT NULL CHECK (discount_percent >= 1 AND discount_percent <= 100),
   status boolean DEFAULT true,
   expiration_date timestamptz,
   usage_limit integer DEFAULT NULL,
@@ -47,11 +47,28 @@ CREATE POLICY "Public voucher admin access" ON vouchers FOR ALL USING (true);
 -- Allow public access to usage log
 CREATE POLICY "Public voucher usage access" ON voucher_usage FOR ALL USING (true);
 
--- 4. INSERT SAMPLE VOUCHERS
+-- 4. INSERT SAMPLE VOUCHERS (Limited to 30 total vouchers system-wide)
+-- Add constraint to limit total voucher count to 30
+CREATE OR REPLACE FUNCTION check_voucher_limit()
+RETURNS TRIGGER AS $$
+BEGIN
+  IF (SELECT COUNT(*) FROM vouchers) >= 30 THEN
+    RAISE EXCEPTION 'Maximum voucher limit of 30 reached. Please delete existing vouchers to add new ones.';
+  END IF;
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER voucher_count_limit
+  BEFORE INSERT ON vouchers
+  FOR EACH ROW
+  EXECUTE FUNCTION check_voucher_limit();
+
+-- Insert sample vouchers
 INSERT INTO vouchers (code, discount_percent, status, expiration_date, usage_limit) 
 VALUES 
-  ('QUALI5', 5, true, '2024-12-31 23:59:59+00', 100),
-  ('WELCOME5', 5, true, '2024-12-31 23:59:59+00', 50),
+  ('QUALI1', 1, true, '2024-12-31 23:59:59+00', 100),
+  ('WELCOME3', 3, true, '2024-12-31 23:59:59+00', 50),
   ('SAVE10', 10, true, '2024-12-31 23:59:59+00', 200),
   ('NEWBIE15', 15, true, '2024-06-30 23:59:59+00', 25),
   ('VIP20', 20, true, NULL, 10)

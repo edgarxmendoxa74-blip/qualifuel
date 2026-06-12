@@ -13,7 +13,7 @@ const VoucherManager: React.FC = () => {
   
   const [formData, setFormData] = useState({
     code: '',
-    discount_percent: 5,
+    discount_percent: 1,
     status: true,
     expiration_date: '',
     usage_limit: ''
@@ -26,7 +26,7 @@ const VoucherManager: React.FC = () => {
   const resetForm = () => {
     setFormData({
       code: '',
-      discount_percent: 5,
+      discount_percent: 1,
       status: true,
       expiration_date: '',
       usage_limit: ''
@@ -34,6 +34,12 @@ const VoucherManager: React.FC = () => {
   };
 
   const handleAdd = () => {
+    // Check if voucher limit is reached (30 vouchers max)
+    if (vouchers.length >= 30) {
+      showToast('Maximum voucher limit of 30 reached. Please delete existing vouchers to add new ones.', 'error');
+      return;
+    }
+    
     resetForm();
     setEditingVoucher(null);
     setIsAdding(true);
@@ -63,8 +69,8 @@ const VoucherManager: React.FC = () => {
       return;
     }
 
-    if (formData.discount_percent < 5 || formData.discount_percent > 100) {
-      showToast('Discount must be between 5% and 100%', 'error');
+    if (formData.discount_percent < 1 || formData.discount_percent > 100) {
+      showToast('Discount must be between 1% and 100%', 'error');
       return;
     }
 
@@ -179,14 +185,20 @@ const VoucherManager: React.FC = () => {
           </div>
         </div>
         
-        {!isAdding && (
+        {!isAdding && vouchers.length < 30 && (
           <button
             onClick={handleAdd}
             className="flex items-center space-x-2 bg-quali-gradient text-white px-4 py-2 rounded-xl hover:shadow-[0_0_20px_rgba(154,202,60,0.3)] transition-all font-medium"
           >
             <Plus className="h-4 w-4" />
-            <span>Add Voucher</span>
+            <span>Add Voucher ({vouchers.length}/30)</span>
           </button>
+        )}
+        
+        {!isAdding && vouchers.length >= 30 && (
+          <div className="flex items-center space-x-2 bg-yellow-500/20 border border-yellow-500/30 text-yellow-300 px-4 py-2 rounded-xl">
+            <span className="text-sm">Voucher limit reached (30/30). Delete existing vouchers to add new ones.</span>
+          </div>
         )}
       </div>
 
@@ -228,10 +240,10 @@ const VoucherManager: React.FC = () => {
               </label>
               <input
                 type="number"
-                min="5"
+                min="1"
                 max="100"
                 value={formData.discount_percent}
-                onChange={(e) => setFormData({ ...formData, discount_percent: parseInt(e.target.value) || 5 })}
+                onChange={(e) => setFormData({ ...formData, discount_percent: parseInt(e.target.value) || 1 })}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-quali-primary"
               />
             </div>
@@ -372,7 +384,7 @@ const VoucherManager: React.FC = () => {
       {vouchers.length === 0 && !loading && (
         <div className="text-center py-12">
           <Ticket className="h-12 w-12 text-gray-600 mx-auto mb-4" />
-          <p className="text-gray-400 mb-4">No vouchers created yet</p>
+          <p className="text-gray-400 mb-4">No vouchers created yet (0/30)</p>
           <button
             onClick={handleAdd}
             className="bg-quali-gradient text-white px-6 py-2 rounded-lg hover:shadow-[0_0_20px_rgba(154,202,60,0.3)] transition-all font-medium"

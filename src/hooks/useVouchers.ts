@@ -33,6 +33,11 @@ export const useVouchers = () => {
 
   const addVoucher = useCallback(async (voucherData: Omit<Voucher, 'id' | 'used_count' | 'created_at' | 'updated_at'>) => {
     try {
+      // Check voucher limit before attempting to add
+      if (vouchers.length >= 30) {
+        throw new Error('Maximum voucher limit of 30 reached. Please delete existing vouchers to add new ones.');
+      }
+      
       const { data, error } = await supabase
         .from('vouchers')
         .insert([{
@@ -43,7 +48,13 @@ export const useVouchers = () => {
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        // Handle database constraint error for voucher limit
+        if (error.message.includes('Maximum voucher limit')) {
+          throw new Error('Maximum voucher limit of 30 reached. Please delete existing vouchers to add new ones.');
+        }
+        throw error;
+      }
       
       setVouchers(prev => [data, ...prev]);
       return data;
@@ -51,7 +62,7 @@ export const useVouchers = () => {
       console.error('Error adding voucher:', error);
       throw error;
     }
-  }, []);
+  }, [vouchers.length]);
 
   const updateVoucher = useCallback(async (id: string, updates: Partial<Voucher>) => {
     try {

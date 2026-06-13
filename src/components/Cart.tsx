@@ -183,7 +183,7 @@ const Cart: React.FC<CartProps> = ({
                     <span className="font-black text-quali-primary tracking-widest italic flex items-center space-x-2">
                       <span>Discount ({appliedVoucher.code})</span>
                       <span className="bg-quali-primary/20 text-quali-primary px-1.5 py-0.5 rounded text-[8px] font-bold">
-                        {appliedVoucher.discount_percent}%
+                        {appliedVoucher.discount_percent === 100 ? 'FREE' : appliedVoucher.discount_percent === 0 ? 'NO DISCOUNT' : `${appliedVoucher.discount_percent}%`}
                       </span>
                     </span>
                     <span className="font-black text-quali-primary">-₱{appliedVoucher.discount_amount.toFixed(2)}</span>

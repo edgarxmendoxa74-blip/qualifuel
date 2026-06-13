@@ -13,7 +13,7 @@ const VoucherManager: React.FC = () => {
   
   const [formData, setFormData] = useState({
     code: '',
-    discount_percent: 1,
+    discount_percent: 0,
     status: true,
     expiration_date: '',
     usage_limit: ''
@@ -26,7 +26,7 @@ const VoucherManager: React.FC = () => {
   const resetForm = () => {
     setFormData({
       code: '',
-      discount_percent: 1,
+      discount_percent: 0,
       status: true,
       expiration_date: '',
       usage_limit: ''
@@ -69,8 +69,8 @@ const VoucherManager: React.FC = () => {
       return;
     }
 
-    if (formData.discount_percent < 1 || formData.discount_percent > 100) {
-      showToast('Discount must be between 1% and 100%', 'error');
+    if (formData.discount_percent < 0 || formData.discount_percent > 100) {
+      showToast('Discount must be between 0% and 100%', 'error');
       return;
     }
 
@@ -240,10 +240,10 @@ const VoucherManager: React.FC = () => {
               </label>
               <input
                 type="number"
-                min="1"
+                min="0"
                 max="100"
                 value={formData.discount_percent}
-                onChange={(e) => setFormData({ ...formData, discount_percent: parseInt(e.target.value) || 1 })}
+                onChange={(e) => setFormData({ ...formData, discount_percent: parseInt(e.target.value) || 0 })}
                 className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-quali-primary"
               />
             </div>

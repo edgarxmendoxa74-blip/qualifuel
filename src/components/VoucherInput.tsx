@@ -74,11 +74,15 @@ const VoucherInput: React.FC<VoucherInputProps> = ({
                   {appliedVoucher.code}
                 </span>
                 <span className="bg-quali-primary text-black px-2 py-1 rounded text-xs font-bold">
-                  {appliedVoucher.discount_percent}% OFF
+                  {appliedVoucher.discount_percent === 100 ? 'FREE' : appliedVoucher.discount_percent === 0 ? 'NO DISCOUNT' : `${appliedVoucher.discount_percent}% OFF`}
                 </span>
               </div>
               <p className="text-green-400 text-sm">
-                Voucher applied! Save ₱{appliedVoucher.discount_amount.toFixed(2)}
+                {appliedVoucher.discount_percent === 100 
+                  ? 'Voucher applied! Your order is FREE!' 
+                  : appliedVoucher.discount_percent === 0 
+                    ? 'Voucher applied! (No discount value)' 
+                    : `Voucher applied! Save ₱${appliedVoucher.discount_amount.toFixed(2)}`}
               </p>
             </div>
           </div>

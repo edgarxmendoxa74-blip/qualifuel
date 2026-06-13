@@ -8,7 +8,7 @@
 CREATE TABLE IF NOT EXISTS vouchers (
   id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
   code text UNIQUE NOT NULL,
-  discount_percent integer NOT NULL CHECK (discount_percent >= 1 AND discount_percent <= 100),
+  discount_percent integer NOT NULL CHECK (discount_percent >= 0 AND discount_percent <= 100),
   status boolean DEFAULT true,
   expiration_date timestamptz,
   usage_limit integer DEFAULT NULL,
@@ -67,7 +67,8 @@ CREATE TRIGGER voucher_count_limit
 -- Insert sample vouchers
 INSERT INTO vouchers (code, discount_percent, status, expiration_date, usage_limit) 
 VALUES 
-  ('QUALI1', 1, true, '2024-12-31 23:59:59+00', 100),
+  ('FREE100', 100, true, '2024-12-31 23:59:59+00', 5),
+  ('QUALI0', 0, true, '2024-12-31 23:59:59+00', 100),
   ('WELCOME3', 3, true, '2024-12-31 23:59:59+00', 50),
   ('SAVE10', 10, true, '2024-12-31 23:59:59+00', 200),
   ('NEWBIE15', 15, true, '2024-06-30 23:59:59+00', 25),
